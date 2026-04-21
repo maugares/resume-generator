@@ -41,7 +41,6 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-    "esModuleInterop": true,    // Essential for importing CJS as ESM
-
+    "esModuleInterop": true // Essential for importing CJS as ESM
   }
 }
