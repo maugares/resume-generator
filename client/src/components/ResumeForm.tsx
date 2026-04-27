@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent } from 'react'
-import { ResumeData } from '../types/resume'
+import type { ResumeData } from '../types/resume'
 
 interface Props {
   formData: ResumeData

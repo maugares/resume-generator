@@ -1,4 +1,4 @@
-import { ResumeData } from '../types/resume'
+import type { ResumeData } from '../types/resume'
 
 /* This function sends the resume data to the server and retrieves the generated PDF as a Blob.
    It uses the Fetch API to make a POST request to the server's /create-pdf endpoint, passing the resume data as JSON.

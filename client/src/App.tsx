@@ -1,6 +1,6 @@
 import { useResume } from './hooks/useResume'
 import { ResumeForm } from './components/ResumeForm'
-import { ResumeData } from './types/resume'
+import type { ResumeData } from './types/resume'
 
 const INITIAL_STATE: ResumeData = {
   name: '',

@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
-import { ResumeData } from '../types/resume';
+import type { ResumeData } from '../types/resume';
 import { generatePdf } from '../services/api';
 
 export const useResume = (initialData: ResumeData) => {
