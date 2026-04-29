@@ -4,9 +4,16 @@ export interface ResumeData {
   email: string;
   address: string;
   phone: string;
-  education: string;
-  experience: string;
-  skills: string;
-  jobTitle: string;
   summary: string;
+  education: string;
+  experience: ExperienceItem[];
+  skills: string;
+}
+
+export interface ExperienceItem {
+  company: string;
+  position: string;
+  startDate: string;
+  endDate: string;
+  description: string;
 }
