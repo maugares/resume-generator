@@ -1,0 +1,40 @@
+/* client/src/styles/ResumePreview.css */
+.preview-window {
+  background-color: #525659; /* Classic PDF viewer dark background */
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.resume-paper {
+  width: 210mm;
+  min-height: 297mm;
+  background: white;
+  display: flex; /* Sidebar and Main side-by-side */
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  text-align: left;
+}
+
+.sidebar {
+  background-color: #323b4c; /* BE-02 Color */
+  color: white;
+  width: 33%;
+  padding: 40px 25px;
+}
+
+.main-content {
+  width: 67%;
+  padding: 50px;
+  color: #333;
+}
+
+.profile-photo {
+  width: 120px;
+  height: 120px;
+  background-color: #777;
+  border-radius: 50%;
+  margin: 0 auto 30px auto;
+  border: 4px solid rgba(255,255,255,0.1);
+}

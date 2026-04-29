@@ -28,7 +28,7 @@ export const ResumeForm = ({ formData, onChange, onSubmit }: Props) => {
         <label>Experience</label>
         <textarea
           name="experience"
-          value={formData.experience}
+          value={formData.experience.map((e) => e.position).join('\n')}
           onChange={onChange}
         />
       </div>

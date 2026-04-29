@@ -1,15 +1,12 @@
+import React from 'react'
 import { useResume } from './hooks/useResume'
 import { ResumeForm } from './components/ResumeForm'
 import type { ResumeData } from './types/resume'
+import { ResumePreview } from './components/ResumePreview'
+import { mockResumeData } from './__mocks__/resumeData'
 
 const INITIAL_STATE: ResumeData = {
-  name: '',
-  email: '',
-  address: '',
-  phone: '',
-  education: '',
-  experience: '',
-  skills: '',
+  ...mockResumeData,
 }
 
 /* 
@@ -25,24 +22,33 @@ It uses:
     - The component renders a main section with a title and the ResumeForm component, passing down the necessary props for managing form state and handling submissions. 
 */
 function App() {
-  const { formData, handleChange, handleSubmit, isLoading } = useResume(INITIAL_STATE);
+  const { formData, handleChange, handleSubmit, isLoading } =
+    useResume(INITIAL_STATE)
 
   return (
-    <main style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <header>
-        <h1>Resume Builder</h1>
-        <p>Fill out the form to generate your A4 PDF.</p>
-      </header>
+    <div style={{ display: 'flex', width: '100vw', height: '100vh' }}>
+      {/* Form Side (400px width) */}
+      <div
+        style={{
+          width: '400px',
+          borderRight: '1px solid #ccc',
+          padding: '20px',
+          overflowY: 'auto',
+        }}
+      >
+        <h2>Resume Editor</h2>
+        <ResumeForm
+          formData={formData}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+        />
+        {isLoading && <p>Generating PDF...</p>}
+      </div>
 
-      <ResumeForm 
-        formData={formData} 
-        onChange={handleChange} 
-        onSubmit={handleSubmit} 
-      />
-
-      {isLoading && <p>Generating your PDF... Please wait.</p>}
-    </main>
-  );
+      {/* Preview Side (Flex remaining space) */}
+      <ResumePreview data={formData} />
+    </div>
+  )
 }
 
-export default App;
+export default App
