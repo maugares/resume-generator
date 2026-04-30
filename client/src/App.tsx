@@ -4,9 +4,17 @@ import { ResumeForm } from './components/ResumeForm'
 import type { ResumeData } from './types/resume'
 import { ResumePreview } from './components/ResumePreview'
 import { mockResumeData } from './__mocks__/resumeData'
+import './styles/App.css'
 
 const INITIAL_STATE: ResumeData = {
-  ...mockResumeData,
+  name: '',
+  email: '',
+  phone: '',
+  address: '',
+  summary: '',
+  experience: [],
+  education: [],
+  skills: [],
 }
 
 /* 
@@ -22,31 +30,57 @@ It uses:
     - The component renders a main section with a title and the ResumeForm component, passing down the necessary props for managing form state and handling submissions. 
 */
 function App() {
-  const { formData, handleChange, handleSubmit, isLoading } =
-    useResume(INITIAL_STATE)
+  const {
+    formData,
+    handleChange,
+    handleSubmit,
+    isLoading,
+    updateArrayItem,
+    addArrayItem,
+    removeArrayItem,
+  } = useResume(INITIAL_STATE)
 
   return (
-    <div style={{ display: 'flex', width: '100vw', height: '100vh' }}>
-      {/* Form Side (400px width) */}
+    <div
+      style={{
+        display: 'flex',
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Sidebar Editor */}
       <div
         style={{
-          width: '400px',
+          width: '500px',
           borderRight: '1px solid #ccc',
-          padding: '20px',
+          height: '100%',
           overflowY: 'auto',
+          backgroundColor: '#524f6374',
         }}
       >
-        <h2>Resume Editor</h2>
+        <h2 style={{ padding: '20px', textAlign: 'center' }}>Resume Editor</h2>
         <ResumeForm
           formData={formData}
-          onChange={handleChange}
+          handleChange={handleChange}
+          updateArrayItem={updateArrayItem}
+          addArrayItem={addArrayItem}
+          removeArrayItem={removeArrayItem}
           onSubmit={handleSubmit}
         />
-        {isLoading && <p>Generating PDF...</p>}
+        {isLoading && (
+          <div
+            style={{ padding: '20px', textAlign: 'center', color: '#28a745' }}
+          >
+            <strong>Generating your PDF...</strong>
+          </div>
+        )}
       </div>
 
-      {/* Preview Side (Flex remaining space) */}
-      <ResumePreview data={formData} />
+      {/* Live Preview Pane */}
+      <div style={{ flex: 1, backgroundColor: '#525659', overflowY: 'auto' }}>
+        <ResumePreview data={formData} />
+      </div>
     </div>
   )
 }

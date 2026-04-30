@@ -2,19 +2,19 @@ import { useState, ChangeEvent, FormEvent } from 'react'
 import type { ResumeData } from '../types/resume'
 import { generatePdf } from '../services/api'
 
-export const useResume = (initialData: ResumeData) => {
-  const [formData, setFormData] = useState<ResumeData>(initialData)
+export const useResume = (initialState: ResumeData) => {
+  const [formData, setFormData] = useState<ResumeData>(initialState)
   const [isLoading, setIsLoading] = useState(false)
 
-  // Handle simple string inputs
+  // Handles standard top-level string fields (name, email, etc.)
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  // NEW: Handle array item updates (e.g., updating the 2nd experience item)
+  // Updates a specific object within an array (e.g., the company name in Experience #2)
   const updateArrayItem = (
     field: keyof ResumeData,
     index: number,
@@ -27,7 +27,7 @@ export const useResume = (initialData: ResumeData) => {
     })
   }
 
-  // NEW: Add a new blank item to an array
+  // Adds a new blank object to a specific array
   const addArrayItem = (field: keyof ResumeData, newItem: any) => {
     setFormData((prev) => ({
       ...prev,
@@ -35,7 +35,7 @@ export const useResume = (initialData: ResumeData) => {
     }))
   }
 
-  // NEW: Remove an item by index
+  // Removes an item from an array by its index
   const removeArrayItem = (field: keyof ResumeData, index: number) => {
     setFormData((prev) => ({
       ...prev,
@@ -46,16 +46,24 @@ export const useResume = (initialData: ResumeData) => {
   const handleSubmit = async (e?: FormEvent) => {
     e?.preventDefault() // Optional chaining in case it's called programmatically
     setIsLoading(true)
+
     try {
+      // Logic restored: Use the service instead of inline fetch
       const blob = await generatePdf(formData)
+
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
-      link.download = `${formData.name}_Resume.pdf`
+      link.download = `${formData.name.replace(/\s+/g, '_')}_Resume.pdf`
+      document.body.appendChild(link)
       link.click()
+      document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
     } catch (error) {
-      console.error(error)
+      console.error('Failed to generate PDF:', error)
+      alert(
+        'There was an error generating your PDF. Please ensure the server is running.'
+      )
     } finally {
       setIsLoading(false)
     }
@@ -63,11 +71,11 @@ export const useResume = (initialData: ResumeData) => {
 
   return {
     formData,
-    updateArrayItem,
-    addArrayItem,
-    removeArrayItem,
     handleChange,
     handleSubmit,
     isLoading,
+    updateArrayItem,
+    addArrayItem,
+    removeArrayItem,
   }
 }
