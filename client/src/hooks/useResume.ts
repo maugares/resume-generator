@@ -1,47 +1,73 @@
-import { useState, ChangeEvent, FormEvent } from 'react';
-import type { ResumeData } from '../types/resume';
-import { generatePdf } from '../services/api';
+import { useState, ChangeEvent, FormEvent } from 'react'
+import type { ResumeData } from '../types/resume'
+import { generatePdf } from '../services/api'
 
 export const useResume = (initialData: ResumeData) => {
-  const [formData, setFormData] = useState<ResumeData>(initialData);
-  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState<ResumeData>(initialData)
+  const [isLoading, setIsLoading] = useState(false)
 
-  // 1. PURE LOGIC: Updates state using a key and value
-  // This can be called by anyone (tests, buttons, effects)
-  const updateField = (name: keyof ResumeData, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  // Handle simple string inputs
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
 
-  // 2. UI WRAPPER: Specifically for HTML Input events
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    // We cast 'name' as keyof ResumeData to keep TS happy
-    updateField(name as keyof ResumeData, value);
-  };
+  // NEW: Handle array item updates (e.g., updating the 2nd experience item)
+  const updateArrayItem = (
+    field: keyof ResumeData,
+    index: number,
+    value: any
+  ) => {
+    setFormData((prev) => {
+      const newArray = [...(prev[field] as any[])]
+      newArray[index] = value
+      return { ...prev, [field]: newArray }
+    })
+  }
+
+  // NEW: Add a new blank item to an array
+  const addArrayItem = (field: keyof ResumeData, newItem: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: [...(prev[field] as any[]), newItem],
+    }))
+  }
+
+  // NEW: Remove an item by index
+  const removeArrayItem = (field: keyof ResumeData, index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: (prev[field] as any[]).filter((_, i) => i !== index),
+    }))
+  }
 
   const handleSubmit = async (e?: FormEvent) => {
-    e?.preventDefault(); // Optional chaining in case it's called programmatically
-    setIsLoading(true);
+    e?.preventDefault() // Optional chaining in case it's called programmatically
+    setIsLoading(true)
     try {
-      const blob = await generatePdf(formData);
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${formData.name}_Resume.pdf`;
-      link.click();
-      window.URL.revokeObjectURL(url);
+      const blob = await generatePdf(formData)
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${formData.name}_Resume.pdf`
+      link.click()
+      window.URL.revokeObjectURL(url)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return {
     formData,
-    updateField, // Exported for independent use/testing
+    updateArrayItem,
+    addArrayItem,
+    removeArrayItem,
     handleChange,
     handleSubmit,
     isLoading,
-  };
-};
+  }
+}
