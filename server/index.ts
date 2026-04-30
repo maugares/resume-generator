@@ -2,6 +2,7 @@ import express from 'express'
 import type { Request, Response } from 'express'
 import puppeteer from 'puppeteer'
 import cors from 'cors'
+import { generateHTML } from './templates/ResumeTemplate.ts'
 
 // Define the shape of the user's resume data
 interface ResumeData {
@@ -20,21 +21,19 @@ app.use(express.json())
 app.post(
   '/create-pdf',
   async (req: Request<{}, {}, ResumeData>, res: Response) => {
-    const { name, email, experience } = req.body
-
     try {
-      const browser = await puppeteer.launch()
+      const browser = await puppeteer.launch({ headless: true })
       const page = await browser.newPage()
 
-      // Simple template with basic typing
-      const content: string = `
-            <h1>${name}</h1>
-            <p>Email: ${email}</p>
-            <p>${experience}</p>
-        `
+      // Generate the HTML using our new modular template
+      const htmlContent = generateHTML(req.body)
 
-      await page.setContent(content)
-      const pdfBuffer = await page.pdf({ format: 'A4' })
+      await page.setContent(htmlContent)
+      const pdfBuffer = await page.pdf({
+        format: 'A4',
+        printBackground: true, // Required for the sidebar color
+        margin: { top: '0', right: '0', bottom: '0', left: '0' },
+      })
 
       await browser.close()
 
