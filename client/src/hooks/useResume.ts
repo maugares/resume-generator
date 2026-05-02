@@ -57,6 +57,13 @@ export const useResume = (initialState: ResumeData) => {
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault()
+
+    // Safety check: Don't send if a name isn't provided
+    if (!formData.name.trim()) {
+      alert('Please enter a name before generating the PDF.')
+      return
+    }
+
     setIsLoading(true)
 
     try {
@@ -69,12 +76,9 @@ export const useResume = (initialState: ResumeData) => {
       link.click()
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
-    } catch (error) {
-      console.error('PDF generation failed:', error)
-      // Data is safe in localStorage even if this alert pops up
-      alert(
-        'There was an error generating your PDF. Please ensure the server is running on port 5000.'
-      )
+    } catch (error: any) {
+      console.error('PDF generation failed:', error.message)
+      alert(`Error: ${error.message}`)
     } finally {
       setIsLoading(false)
     }

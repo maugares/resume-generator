@@ -5,7 +5,6 @@ import cors from 'cors'
 import type { ResumeData } from '../client/src/types/resume'
 import { generateHTML } from './templates/ResumeTemplate.ts'
 
-
 const app = express()
 const PORT: number = 5000
 
@@ -26,7 +25,16 @@ app.post(
     try {
       console.log('Incoming request for:', req.body.name)
 
-      const browser = await puppeteer.launch({ headless: true })
+      // Basic validation check
+      if (!req.body.name) {
+        console.error('Validation Failed: Name is missing')
+        return res.status(400).send('Name field is required to generate a PDF')
+      }
+
+      const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox'], // Added for better compatibility
+      })
       const page = await browser.newPage()
 
       // Generate the HTML using our new modular template
@@ -37,7 +45,7 @@ app.post(
       const pdfBuffer = await page.pdf({
         format: 'A4',
         printBackground: true, // Required for the sidebar color
-        margin: { top: '0', right: '0', bottom: '0', left: '0' },
+        margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' },
       })
 
       await browser.close()
@@ -53,5 +61,5 @@ app.post(
 )
 
 app.listen(PORT, () => {
-  console.log(`✅ Server is active at http://localhost:${PORT}`)
+  console.log(`✅ Server listening at http://localhost:${PORT}`)
 })

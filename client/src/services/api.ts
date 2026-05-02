@@ -18,7 +18,11 @@ export const generatePdf = async (data: ResumeData): Promise<Blob> => {
   })
 
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
+    // Attempt to get the specific error message from the server
+    const errorMessage = await response.text()
+    throw new Error(
+      errorMessage || `Request failed with status ${response.status}`
+    )
   }
 
   return await response.blob()
