@@ -1,14 +1,22 @@
-import { useState, ChangeEvent, FormEvent } from 'react'
+import { useState, useEffect } from 'react'
 import type { ResumeData } from '../types/resume'
 import { generatePdf } from '../services/api'
+
+const LOCAL_STORAGE_KEY = 'resume_editor_data'
 
 export const useResume = (initialState: ResumeData) => {
   const [formData, setFormData] = useState<ResumeData>(initialState)
   const [isLoading, setIsLoading] = useState(false)
 
+
+  // Automatically save to localStorage whenever formData changes
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(formData))
+  }, [formData])
+
   // Handles standard top-level string fields (name, email, etc.)
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
@@ -43,24 +51,23 @@ export const useResume = (initialState: ResumeData) => {
     }))
   }
 
-  const handleSubmit = async (e?: FormEvent) => {
-    e?.preventDefault() // Optional chaining in case it's called programmatically
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault()
     setIsLoading(true)
 
     try {
-      // Logic restored: Use the service instead of inline fetch
       const blob = await generatePdf(formData)
-
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
-      link.download = `${formData.name.replace(/\s+/g, '_')}_Resume.pdf`
+      link.download = `${formData.name || 'Resume'}.pdf`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
     } catch (error) {
-      console.error('Failed to generate PDF:', error)
+      console.error('PDF generation failed:', error)
+      // Data is safe in localStorage even if this alert pops up
       alert(
         'There was an error generating your PDF. Please ensure the server is running on port 5000.'
       )
