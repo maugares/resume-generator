@@ -11,6 +11,8 @@ interface ResumeFormProps {
   addArrayItem: (field: keyof ResumeData, newItem: any) => void
   removeArrayItem: (field: keyof ResumeData, index: number) => void
   onSubmit: (e: React.FormEvent) => void
+  clearForm: () => void // Added prop
+  isLoading: boolean
 }
 
 export const ResumeForm = ({
@@ -20,9 +22,23 @@ export const ResumeForm = ({
   addArrayItem,
   removeArrayItem,
   onSubmit,
+  clearForm,
+  isLoading,
 }: ResumeFormProps) => {
   return (
     <form onSubmit={onSubmit} className="resume-form-container">
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <h2 style={{ color: '#323b4c', margin: 0 }}>Resume Editor</h2>
+        <button type="button" onClick={clearForm} className="text-btn delete">
+          Reset Form
+        </button>
+      </div>
       {/* PERSONAL DETAILS */}
       <section className="form-section">
         <h3>Personal Details</h3>
@@ -259,8 +275,8 @@ export const ResumeForm = ({
         </button>
       </section>
 
-      <button type="submit" className="submit-btn">
-        Generate PDF
+      <button type="submit" className="submit-btn" disabled={isLoading}>
+        {isLoading ? 'Generating PDF...' : 'Generate PDF'}
       </button>
     </form>
   )

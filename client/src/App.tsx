@@ -3,7 +3,6 @@ import { useResume } from './hooks/useResume'
 import { ResumeForm } from './components/ResumeForm'
 import type { ResumeData } from './types/resume'
 import { ResumePreview } from './components/ResumePreview'
-import { mockResumeData } from './__mocks__/resumeData'
 import './styles/App.css'
 
 const INITIAL_STATE: ResumeData = {
@@ -38,6 +37,7 @@ function App() {
     updateArrayItem,
     addArrayItem,
     removeArrayItem,
+    clearForm,
   } = useResume(INITIAL_STATE)
 
   return (
@@ -67,14 +67,9 @@ function App() {
           addArrayItem={addArrayItem}
           removeArrayItem={removeArrayItem}
           onSubmit={handleSubmit}
+          clearForm={clearForm}
+          isLoading={isLoading}
         />
-        {isLoading && (
-          <div
-            style={{ padding: '20px', textAlign: 'center', color: '#28a745' }}
-          >
-            <strong>Generating your PDF...</strong>
-          </div>
-        )}
       </div>
 
       {/* Live Preview Pane */}

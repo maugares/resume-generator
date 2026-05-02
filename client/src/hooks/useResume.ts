@@ -5,6 +5,7 @@ import { generatePdf } from '../services/api'
 const LOCAL_STORAGE_KEY = 'resume_editor_data'
 
 export const useResume = (initialState: ResumeData) => {
+  // Logic to load existing data from localStorage on initialization
   const [formData, setFormData] = useState<ResumeData>(() => {
     const savedData = localStorage.getItem(LOCAL_STORAGE_KEY)
     return savedData ? JSON.parse(savedData) : initialState
@@ -79,6 +80,14 @@ export const useResume = (initialState: ResumeData) => {
     }
   }
 
+  // Optional: Function to clear the form
+  const clearForm = () => {
+    if (window.confirm('Are you sure you want to clear all data?')) {
+      localStorage.removeItem(LOCAL_STORAGE_KEY)
+      setFormData(initialState)
+    }
+  }
+
   return {
     formData,
     handleChange,
@@ -87,5 +96,6 @@ export const useResume = (initialState: ResumeData) => {
     updateArrayItem,
     addArrayItem,
     removeArrayItem,
+    clearForm,
   }
 }
