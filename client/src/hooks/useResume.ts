@@ -5,9 +5,12 @@ import { generatePdf } from '../services/api'
 const LOCAL_STORAGE_KEY = 'resume_editor_data'
 
 export const useResume = (initialState: ResumeData) => {
-  const [formData, setFormData] = useState<ResumeData>(initialState)
-  const [isLoading, setIsLoading] = useState(false)
+  const [formData, setFormData] = useState<ResumeData>(() => {
+    const savedData = localStorage.getItem(LOCAL_STORAGE_KEY)
+    return savedData ? JSON.parse(savedData) : initialState
+  })
 
+  const [isLoading, setIsLoading] = useState(false)
 
   // Automatically save to localStorage whenever formData changes
   useEffect(() => {
