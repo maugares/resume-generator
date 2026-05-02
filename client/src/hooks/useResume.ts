@@ -62,7 +62,7 @@ export const useResume = (initialState: ResumeData) => {
     } catch (error) {
       console.error('Failed to generate PDF:', error)
       alert(
-        'There was an error generating your PDF. Please ensure the server is running.'
+        'There was an error generating your PDF. Please ensure the server is running on port 5000.'
       )
     } finally {
       setIsLoading(false)

@@ -9,7 +9,7 @@ import type { ResumeData } from '../types/resume'
  * @returns A Promise resolving to the PDF Blob.
  */
 export const generatePdf = async (data: ResumeData): Promise<Blob> => {
-  const response = await fetch('http://localhost:3001/create-pdf', {
+  const response = await fetch('http://localhost:5000/create-pdf', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ export const generatePdf = async (data: ResumeData): Promise<Blob> => {
   })
 
   if (!response.ok) {
-    throw new Error(`Server Error: ${response.statusText}`)
+    throw new Error(`HTTP error! status: ${response.status}`)
   }
 
   return await response.blob()
