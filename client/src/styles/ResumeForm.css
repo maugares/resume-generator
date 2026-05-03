@@ -73,8 +73,9 @@ textarea {
 }
 
 textarea {
-  resize: vertical;
+  /* resize: vertical; */
   min-height: 80px;
+  height: auto;
   line-height: 1.4;
 }
 

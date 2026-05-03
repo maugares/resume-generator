@@ -22,6 +22,7 @@ app.use(express.json())
 app.post(
   '/create-pdf',
   async (req: Request<{}, {}, ResumeData>, res: Response) => {
+    let browser: puppeteer.Browser | null = null
     try {
       console.log('Incoming request for:', req.body.name)
 
@@ -31,16 +32,17 @@ app.post(
         return res.status(400).send('Name field is required to generate a PDF')
       }
 
-      const browser = await puppeteer.launch({
+      browser = await puppeteer.launch({
         headless: true,
-        args: ['--no-sandbox'], // Added for better compatibility
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
       })
       const page = await browser.newPage()
 
       // Generate the HTML using our new modular template
       const htmlContent = generateHTML(req.body)
 
-      await page.setContent(htmlContent)
+      // networkidle0 is crucial here to ensure all styles are processed
+      await page.setContent(htmlContent, { waitUntil: 'networkidle0' })
 
       const pdfBuffer = await page.pdf({
         format: 'A4',
@@ -54,6 +56,7 @@ app.post(
       res.send(pdfBuffer)
       console.log('Successfully generated PDF')
     } catch (error) {
+      if (browser) await browser.close()
       console.error('Generation Error:', error)
       res.status(500).send('Server failed to generate PDF')
     }
@@ -61,5 +64,5 @@ app.post(
 )
 
 app.listen(PORT, () => {
-  console.log(`✅ Server listening at http://localhost:${PORT}`)
+  console.log(`🚀 Server running on http://localhost:${PORT}`)
 })
