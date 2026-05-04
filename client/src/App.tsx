@@ -6,7 +6,7 @@ import { ResumePreview } from './components/ResumePreview'
 import './styles/App.css'
 
 const INITIAL_STATE: ResumeData = {
-  name: '',
+  name: 'mauro garc',
   email: '',
   phone: '',
   address: '',
@@ -50,7 +50,7 @@ function App() {
       }}
     >
       {/* Sidebar Editor */}
-      <div
+      {/* <div
         style={{
           width: '500px',
           borderRight: '1px solid #ccc',
@@ -70,7 +70,7 @@ function App() {
           clearForm={clearForm}
           isLoading={isLoading}
         />
-      </div>
+      </div> */}
 
       {/* Live Preview Pane */}
       <div style={{ flex: 1, backgroundColor: '#525659', overflowY: 'auto' }}>
