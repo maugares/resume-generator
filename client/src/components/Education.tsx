@@ -47,16 +47,15 @@ export function Education({
             <div className="flex gap-1 text-gray-400 text-[11px]">
               <EditableText
                 value={edu.startDate}
+                autoWidth
                 onChange={(v) =>
-                  updateArrayItem('education', i, {
-                    ...edu,
-                    startDate: v,
-                  })
+                  updateArrayItem('education', i, { ...edu, startDate: v })
                 }
               />
               <span>-</span>
               <EditableText
                 value={edu.endDate}
+                autoWidth
                 onChange={(v) =>
                   updateArrayItem('education', i, { ...edu, endDate: v })
                 }

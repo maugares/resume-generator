@@ -1,3 +1,4 @@
+/* client/src/components/Skills.tsx */
 import type React from 'react'
 import type { ResumeData } from '../types/resume'
 import { EditableText } from './EditableText'
@@ -8,23 +9,18 @@ export function Skills({
   updateField,
 }: {
   data: ResumeData
-  updateField: (field: string, value: string) => void
+  updateField: (field: string, value: any) => void
 }) {
   return (
-    <div>
+    <section>
       <Header title="Skills" />
       <EditableText
-        value={data.skills.join(', ')}
-        onChange={(v) =>
-          updateField(
-            'skills',
-            v.split(',').map((s) => s.trim())
-          )
-        }
+        value={data.skills} // Pass the string directly
+        onChange={(v) => updateField('skills', v)} // useResume handleChange handles strings
         multiline
-        placeholder="List your skills, separated by commas"
-        className="text-[13px] leading-snug"
+        placeholder="Design, Development, UI/UX..."
+        className="text-[13px] leading-relaxed text-gray-100"
       />
-    </div>
+    </section>
   )
 }
