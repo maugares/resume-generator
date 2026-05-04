@@ -36,5 +36,5 @@ export const mockResumeData: ResumeData = {
       description: 'Assisted in developing a web application using React.',
     },
   ],
-  skills: ['JavaScript', 'React', 'Node.js'],
+  skills: 'JavaScript', 'React', 'Node.js',
 }

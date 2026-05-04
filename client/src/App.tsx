@@ -6,14 +6,14 @@ import { ResumePreview } from './components/ResumePreview'
 import './styles/App.css'
 
 const INITIAL_STATE: ResumeData = {
-  name: 'mauro garc',
+  name: '',
   email: '',
   phone: '',
   address: '',
   summary: '',
   experience: [],
   education: [],
-  skills: [],
+  skills: '',
 }
 
 /* 
@@ -32,49 +32,33 @@ function App() {
   const {
     formData,
     handleChange,
-    handleSubmit,
-    isLoading,
     updateArrayItem,
     addArrayItem,
     removeArrayItem,
-    clearForm,
   } = useResume(INITIAL_STATE)
 
+  const handlePrint = () => {
+    window.print() // Triggers the system print dialog
+  }
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        width: '100vw',
-        height: '100vh',
-        overflow: 'hidden',
-      }}
-    >
-      {/* Sidebar Editor */}
-      {/* <div
-        style={{
-          width: '500px',
-          borderRight: '1px solid #ccc',
-          height: '100%',
-          overflowY: 'auto',
-          backgroundColor: '#524f6374',
-        }}
+    <div className="relative w-screen h-screen bg-[#525659] overflow-hidden">
+      {/* Floating Download Button - Hidden during print */}
+      <button
+        onClick={handlePrint}
+        className="fixed bottom-8 right-8 z-50 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-lg no-print transition-all transform hover:scale-105"
       >
-        <h2 style={{ padding: '20px', textAlign: 'center' }}>Resume Editor</h2>
-        <ResumeForm
-          formData={formData}
-          handleChange={handleChange}
+        Download PDF
+      </button>
+
+      <div className="h-full overflow-y-auto">
+        <ResumePreview
+          data={formData}
+          updateField={handleChange}
           updateArrayItem={updateArrayItem}
           addArrayItem={addArrayItem}
           removeArrayItem={removeArrayItem}
-          onSubmit={handleSubmit}
-          clearForm={clearForm}
-          isLoading={isLoading}
         />
-      </div> */}
-
-      {/* Live Preview Pane */}
-      <div style={{ flex: 1, backgroundColor: '#525659', overflowY: 'auto' }}>
-        <ResumePreview data={formData} />
       </div>
     </div>
   )

@@ -1,10 +1,11 @@
+/* client/src/components/EditableText.tsx */
 import React, { useState, useRef, useEffect } from 'react'
 
 interface EditableTextProps {
   value: string
   onChange: (newValue: string) => void
   multiline?: boolean
-  className?: string // Typography classes (e.g., text-[15px] font-bold)
+  className?: string
   placeholder?: string
 }
 
@@ -19,7 +20,6 @@ export const EditableText: React.FC<EditableTextProps> = ({
   const [tempValue, setTempValue] = useState(value)
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null)
 
-  // Focus the input automatically when entering edit mode
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus()
@@ -32,17 +32,15 @@ export const EditableText: React.FC<EditableTextProps> = ({
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !multiline) {
-      handleBlur()
-    }
+    if (e.key === 'Enter' && !multiline) handleBlur()
     if (e.key === 'Escape') {
-      setTempValue(value) // Revert changes
+      setTempValue(value)
       setIsEditing(false)
     }
   }
 
-  // Common styles to ensure the input looks like the text it replaces
-  const sharedClasses = `bg-transparent border-none outline-none ring-0 p-0 m-0 w-full resize-none ${className}`
+  // FORCE INHERITANCE: added 'text-[inherit]' and 'placeholder:opacity-30'
+  const sharedClasses = `bg-transparent border-none outline-none ring-0 p-0 m-0 w-full resize-none text-[inherit] font-[inherit] ${className}`
 
   if (isEditing) {
     return multiline ? (
@@ -71,7 +69,8 @@ export const EditableText: React.FC<EditableTextProps> = ({
   return (
     <div
       onClick={() => setIsEditing(true)}
-      className={`cursor-text hover:bg-black/5 rounded px-1 -mx-1 transition-colors ${className} ${!value ? 'italic opacity-50' : ''}`}
+      /* HOVER UPDATE: Use white/10 for sidebar visibility and black/5 for main content */
+      className={`cursor-text hover:bg-current/10 rounded px-1 -mx-1 transition-colors min-h-[1.2em] ${className} ${!value ? 'italic opacity-50' : ''}`}
     >
       {value || placeholder}
     </div>
