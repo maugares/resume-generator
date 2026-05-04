@@ -1,31 +1,45 @@
 import React from 'react'
+import { EditableText } from './EditableText'
 import type { ResumeData } from '../types/resume'
 
 interface Props {
   data: ResumeData
+  updateField: (field: keyof ResumeData, value: string) => void
+  updateArrayItem: (
+    field: 'experience' | 'education' | 'skills',
+    index: number,
+    newItem: any
+  ) => void
 }
 
-export const ResumePreview = ({ data }: Props) => {
-  
+export const ResumePreview = ({
+  data,
+  updateField,
+  updateArrayItem,
+}: Props) => {
   return (
     <div className="flex justify-center bg-gray p-10 min-h-screen">
       <article
         id="resume-document"
         className="flex w-a4 min-h-a4 bg-white shadow-2xl font-sans print:m-0 print:shadow-none"
       >
-        <aside className="w-[33%] bg-side text-white px-8 py-12 flex flex-col gap-10 text-[13px]">
+        {/* SIDEBAR */}
+        <aside className="w-[33%] bg-resume-slate text-white px-8 py-12 flex flex-col gap-10 text-[13px]">
           <Picture />
-          <ContactInfo data={data} />
-          <Education data={data} />
-          <Skills data={data} />
+          <ContactInfo data={data} updateField={updateField} />
+          <Education data={data} updateArrayItem={updateArrayItem} />
+          <Skills data={data} updateArrayItem={updateArrayItem} />
         </aside>
 
+        {/* MAIN CONTENT */}
         <main className="flex-1 p-14 text-resume-slate">
-          <h1 className="text-[42px] font-extrabold uppercase leading-[1.1] mb-12 tracking-tight">
-            {data.name || 'YOUR NAME'}
-          </h1>
-
-          <Experience data={data} />
+          <EditableText
+            value={data.name}
+            onChange={(v) => updateField('name', v)}
+            className="text-[42px] font-extrabold uppercase leading-[1.1] mb-12 tracking-tight"
+            placeholder="YOUR NAME"
+          />
+          <Experience data={data} updateArrayItem={updateArrayItem} />
         </main>
       </article>
     </div>
@@ -46,35 +60,80 @@ function Picture() {
   )
 }
 
-function ContactInfo({ data }: { data: ResumeData }) {
+function ContactInfo({
+  data,
+  updateField,
+}: {
+  data: ResumeData
+  updateField: any
+}) {
   return (
     <section>
       <Header headerText="Contact" />
       <div className="space-y-1">
-        <div>{data.phone}</div>
-        <div className="break-all">{data.email}</div>
-        <div>{data.address}</div>
+        <EditableText
+          value={data.phone}
+          onChange={(v) => updateField('phone', v)}
+          placeholder="Phone"
+        />
+        <EditableText
+          value={data.email}
+          onChange={(v) => updateField('email', v)}
+          placeholder="Email"
+          className="break-all"
+        />
+        <EditableText
+          value={data.address}
+          onChange={(v) => updateField('address', v)}
+          placeholder="Address"
+          multiline
+        />
       </div>
     </section>
   )
 }
 
-function Education({ data }: { data: ResumeData }) {
+function Education({
+  data,
+  updateArrayItem,
+}: {
+  data: ResumeData
+  updateArrayItem: any
+}) {
   return (
     <section className="mb-1">
       <Header headerText="Education" />
       <div className="space-y-6">
         {data.education.map((edu, i) => (
           <div key={i} className="text-[13px] text-gray-100">
-            {/* Degree Title - Bold and White */}
-            <div className="font-bold leading-tight mb-1">{edu.degree}</div>
-            {/* Institution - Gray/Italic */}
-            <div className="text-gray-400 text-[12px] italic">
-              {edu.institution}
-            </div>
-            {/* Date - Now on its own line below, matching the original look */}
-            <div className="text-gray-400 text-[11px] mt-0.5">
-              {edu.startDate} - {edu.endDate}
+            <EditableText
+              value={edu.degree}
+              onChange={(v) =>
+                updateArrayItem('education', i, { ...edu, degree: v })
+              }
+              className="font-bold  leading-tight"
+            />
+            <EditableText
+              value={edu.institution}
+              onChange={(v) =>
+                updateArrayItem('education', i, { ...edu, institution: v })
+              }
+              className="text-gray-300 text-[12px] italic"
+            />
+            <div className="flex gap-1 text-gray-400 text-[11px]">
+              <EditableText
+                value={edu.startDate}
+                onChange={(v) =>
+                  updateArrayItem('education', i, { ...edu, startDate: v })
+                }
+              />
+              <span>-</span>
+              <EditableText
+                value={edu.endDate}
+                onChange={(v) =>
+                  updateArrayItem('education', i, { ...edu, endDate: v })
+                }
+              />
             </div>
           </div>
         ))}
@@ -83,7 +142,13 @@ function Education({ data }: { data: ResumeData }) {
   )
 }
 
-function Experience({ data }: { data: ResumeData }) {
+function Experience({
+  data,
+  updateArrayItem,
+}: {
+  data: ResumeData
+  updateArrayItem: any
+}) {
   return (
     <section>
       <Header headerText="Experience" />
@@ -91,19 +156,44 @@ function Experience({ data }: { data: ResumeData }) {
         {data.experience.map((exp, i) => (
           <div key={i}>
             <div className="flex justify-between items-baseline mb-1">
-              <span className="text-[15px] font-bold uppercase">
-                {exp.position}
-              </span>
-              <span className="text-[13px] italic text-gray-400 font-medium">
-                {exp.startDate} - {exp.endDate}
-              </span>
+              <EditableText
+                value={exp.position}
+                onChange={(v) =>
+                  updateArrayItem('experience', i, { ...exp, position: v })
+                }
+                className="text-[15px] font-bold uppercase"
+              />
+              <div className="flex gap-1 text-[13px] italic text-gray-400 font-medium">
+                <EditableText
+                  value={exp.startDate}
+                  onChange={(v) =>
+                    updateArrayItem('experience', i, { ...exp, startDate: v })
+                  }
+                />
+                <span>-</span>
+                <EditableText
+                  value={exp.endDate}
+                  onChange={(v) =>
+                    updateArrayItem('experience', i, { ...exp, endDate: v })
+                  }
+                />
+              </div>
             </div>
-            <div className="text-[14px] text-gray-500 italic mb-3 font-medium">
-              {exp.company}
-            </div>
-            <p className="text-[13px] leading-[1.7] text-gray-700">
-              {exp.description}
-            </p>
+            <EditableText
+              value={exp.company}
+              onChange={(v) =>
+                updateArrayItem('experience', i, { ...exp, company: v })
+              }
+              className="text-[14px] text-gray-500 italic mb-3 font-medium"
+            />
+            <EditableText
+              value={exp.description}
+              onChange={(v) =>
+                updateArrayItem('experience', i, { ...exp, description: v })
+              }
+              className="text-[13px] leading-[1.7] text-gray-700"
+              multiline
+            />
           </div>
         ))}
       </div>
@@ -111,13 +201,25 @@ function Experience({ data }: { data: ResumeData }) {
   )
 }
 
-function Skills({ data }: { data: ResumeData }) {
+function Skills({
+  data,
+  updateArrayItem,
+}: {
+  data: ResumeData
+  updateArrayItem: any
+}) {
   return (
     <section>
       <Header headerText="Skills" />
-      <ul>
+      <ul className="list-disc list-inside">
         {data.skills.map((s, i) => (
-          <li key={i}>{s}</li>
+          <li key={i}>
+            <EditableText
+              value={s}
+              onChange={(v) => updateArrayItem('skills', i, v)}
+              className="inline leading-relaxed"
+            />
+          </li>
         ))}
       </ul>
     </section>

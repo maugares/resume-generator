@@ -3,7 +3,7 @@
 
 @theme {
   /* This creates 'bg-resume-slate' used in your sidebar[cite: 1, 5] */
-  --color-side: #323b4c;
+  --color-resume-slate: #323b4c;
 
   /* This defines the physical A4 paper width for 'w-a4'[cite: 1, 5] */
   --width-a4: 210mm;
