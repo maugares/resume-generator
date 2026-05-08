@@ -24,3 +24,5 @@ export interface EducationItem {
   startDate: string
   endDate: string
 }
+
+export type ResumeArrayField = 'experience' | 'education'

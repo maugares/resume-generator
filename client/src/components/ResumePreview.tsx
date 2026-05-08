@@ -1,4 +1,3 @@
-import React from 'react'
 import { EditableText } from './EditableText'
 import { ContactInfo } from './ContactInfo'
 import { Education } from './Education'

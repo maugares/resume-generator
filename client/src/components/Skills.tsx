@@ -1,5 +1,4 @@
 /* client/src/components/Skills.tsx */
-import type React from 'react'
 import { EditableText } from './EditableText'
 import { Header } from './Header'
 import { useResumeContext } from '../context/ResumeContext'

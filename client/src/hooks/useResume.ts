@@ -1,7 +1,27 @@
 import { useState, useEffect } from 'react'
-import type { ResumeData } from '../types/resume'
+import type {
+  EducationItem,
+  ExperienceItem,
+  ResumeArrayField,
+  ResumeData,
+} from '../types/resume'
 
 const LOCAL_STORAGE_KEY = 'resume_editor_data'
+
+const createEmptyExperience = (): ExperienceItem => ({
+  position: '',
+  company: '',
+  startDate: '',
+  endDate: '',
+  description: '',
+})
+
+const createEmptyEducation = (): EducationItem => ({
+  degree: '',
+  institution: '',
+  startDate: '',
+  endDate: '',
+})
 
 export const useResume = (initialState: ResumeData) => {
   const [formData, setFormData] = useState<ResumeData>(() => {
@@ -13,48 +33,38 @@ export const useResume = (initialState: ResumeData) => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(formData))
   }, [formData])
 
-  // Handles single fields (name, email, phone, etc.)
-  const handleChange = (name: string, value: string) => {
+  const handleChange = (name: keyof ResumeData, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const updateArrayItem = (
-    field: keyof ResumeData,
+  const updateArrayItem = <TField extends ResumeArrayField>(
+    field: TField,
     index: number,
-    value: any
+    value: ResumeData[TField][number]
   ) => {
     setFormData((prev) => {
-      const newArray = [...(prev[field] as any[])]
+      const newArray = [...prev[field]]
       newArray[index] = value
       return { ...prev, [field]: newArray }
     })
   }
 
-  const addArrayItem = (field: 'experience' | 'education' | 'skills') => {
+  const addArrayItem = (field: ResumeArrayField) => {
     const templates = {
-      experience: {
-        position: '',
-        company: '',
-        startDate: '',
-        endDate: '',
-        description: '',
-      },
-      education: { degree: '', institution: '', startDate: '', endDate: '' },
-      skills: '',
+      experience: createEmptyExperience(),
+      education: createEmptyEducation(),
     }
+
     setFormData((prev) => ({
       ...prev,
-      [field]: [...(prev[field] as any[]), templates[field]],
+      [field]: [...prev[field], templates[field]],
     }))
   }
 
-  const removeArrayItem = (
-    field: 'experience' | 'education' | 'skills',
-    index: number
-  ) => {
+  const removeArrayItem = (field: ResumeArrayField, index: number) => {
     setFormData((prev) => ({
       ...prev,
-      [field]: (prev[field] as any[]).filter((_, i) => i !== index),
+      [field]: prev[field].filter((_, i) => i !== index),
     }))
   }
 

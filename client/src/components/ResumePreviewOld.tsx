@@ -1,5 +1,4 @@
 // Create a ResumePreview component in React that uses the same .page, .sidebar, and .main classes as the PDF.
-import React from 'react'
 import type { ResumeData } from '../types/resume'
 import '../styles/ResumePreview.css'
 
@@ -7,22 +6,22 @@ interface Props {
   resumeData: ResumeData
 }
 
-export const ResumePreview = ({ data }: Props) => {
+export const ResumePreview = ({ resumeData }: Props) => {
   // data = mockResumeData
   return (
     <div className="preview-window">
       <article className="resume-paper">
         <aside className="sidebar">
           <div className="profile-photo" />
-          <ContactInfo data={data} />
-          <Education data={data} />
-          <Skills data={data} />
+          <ContactInfo data={resumeData} />
+          <Education data={resumeData} />
+          <Skills data={resumeData} />
         </aside>
 
         <main className="main-content">
-          <h1>{data.name || 'YOUR NAME'}</h1>
-          <p className="summary">{data.summary}</p>
-          <Experience data={data} />
+          <h1>{resumeData.name || 'YOUR NAME'}</h1>
+          <p className="summary">{resumeData.summary}</p>
+          <Experience data={resumeData} />
         </main>
       </article>
     </div>
@@ -30,11 +29,7 @@ export const ResumePreview = ({ data }: Props) => {
 }
 
 function Header({ headerText }: { headerText: string }) {
-  return (
-    <h3 className="section-header">
-      {headerText}
-    </h3>
-  )
+  return <h3 className="section-header">{headerText}</h3>
 }
 
 function ContactInfo({ data }: { data: ResumeData }) {
@@ -89,11 +84,7 @@ function Skills({ data }: { data: ResumeData }) {
   return (
     <section>
       <Header headerText="Skills" />
-      <ul>
-        {data.skills.map((s, i) => (
-          <li key={i}>{s}</li>
-        ))}
-      </ul>
+      <p>{data.skills}</p>
     </section>
   )
 }

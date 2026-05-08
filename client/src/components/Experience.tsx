@@ -1,4 +1,3 @@
-import type React from 'react'
 import { EditableText } from './EditableText'
 import { Header } from './Header'
 import { AddButton } from './AddButton'
@@ -34,7 +33,6 @@ export function Experience() {
               <div className="flex gap-1 italic text-gray-400 font-medium">
                 <EditableText
                   value={exp.startDate}
-                  autoWidth
                   onChange={(v) =>
                     updateArrayItem('experience', i, { ...exp, startDate: v })
                   }
@@ -42,7 +40,6 @@ export function Experience() {
                 <span>-</span>
                 <EditableText
                   value={exp.endDate}
-                  autoWidth
                   onChange={(v) =>
                     updateArrayItem('experience', i, { ...exp, endDate: v })
                   }

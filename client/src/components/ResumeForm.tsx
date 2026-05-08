@@ -1,16 +1,14 @@
-import React from 'react'
+import type { ChangeEvent, FormEvent } from 'react'
 import type { ResumeData } from '../types/resume'
 import '../styles/ResumeForm.css'
 
 interface ResumeFormProps {
   formData: ResumeData
-  handleChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void
+  handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
   updateArrayItem: (field: keyof ResumeData, index: number, value: any) => void
   addArrayItem: (field: keyof ResumeData, newItem: any) => void
   removeArrayItem: (field: keyof ResumeData, index: number) => void
-  onSubmit: (e: React.FormEvent) => void
+  onSubmit: (e: FormEvent) => void
   clearForm: () => void // Added prop
   isLoading: boolean
 }
@@ -246,33 +244,12 @@ export const ResumeForm = ({
       {/* SKILLS */}
       <section className="form-section">
         <h3>Skills</h3>
-        <div className="skills-editor-grid">
-          {formData.skills.map((skill, index) => (
-            <div key={index} className="skill-chip-input">
-              <input
-                placeholder="Skill"
-                value={skill}
-                onChange={(e) =>
-                  updateArrayItem('skills', index, e.target.value)
-                }
-              />
-              <button
-                type="button"
-                className="skill-remove-btn"
-                onClick={() => removeArrayItem('skills', index)}
-              >
-                ×
-              </button>
-            </div>
-          ))}
-        </div>
-        <button
-          type="button"
-          className="add-btn"
-          onClick={() => addArrayItem('skills', '')}
-        >
-          + Add Skill
-        </button>
+        <textarea
+          name="skills"
+          placeholder="JavaScript, React, Node.js"
+          value={formData.skills}
+          onChange={handleChange}
+        />
       </section>
 
       <button type="submit" className="submit-btn" disabled={isLoading}>

@@ -1,11 +1,11 @@
-import type React from 'react'
+import type { ResumeArrayField } from '../types/resume'
 
 export function AddButton({
   addArrayItem,
   field,
 }: {
-  addArrayItem: (field: any) => void
-  field: any
+  addArrayItem: (field: ResumeArrayField) => void
+  field: ResumeArrayField
 }) {
   return (
     <button

@@ -1,13 +1,13 @@
-import type React from 'react'
+import type { ResumeArrayField } from '../types/resume'
 
 export function RemoveButton({
   removeArrayItem,
   index,
   field,
 }: {
-  removeArrayItem: (field: any, index: number) => void
+  removeArrayItem: (field: ResumeArrayField, index: number) => void
   index: number
-  field: any
+  field: ResumeArrayField
 }) {
   return (
     <button
