@@ -1,0 +1,39 @@
+/* client/src/index.css */
+@import 'tailwindcss';
+
+@theme {
+  --color-resume-slate: #323b4c;
+  --width-a4: 210mm;
+  --height-a4: 297mm;
+}
+
+/* Print-specific overrides */
+@media print {
+  body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  /* Ensure shadows and UI elements don't print */
+  #resume-document {
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
+}
+
+@layer base {
+  body {
+    margin: 0;
+  }
+
+  html {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12px;
+    text-size-adjust: 'auto';
+  }
+}

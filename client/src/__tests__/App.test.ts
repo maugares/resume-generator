@@ -1,4 +1,4 @@
-describe('index', () => {
+describe('App', () => {
   it('placeholder test', () => {
     expect(true).toBe(true)
   })
