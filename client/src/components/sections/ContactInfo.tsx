@@ -1,6 +1,6 @@
-import { EditableText } from './EditableText'
-import { Header } from './Header'
-import { useResumeContext } from '../context/ResumeContext'
+import { EditableText } from '../ui'
+import { Header } from '../ui'
+import { useResumeContext } from '../../context'
 
 export function ContactInfo() {
   const { formData, handleChange } = useResumeContext()

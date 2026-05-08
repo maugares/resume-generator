@@ -1,7 +1,6 @@
 import { renderHook, act } from '@testing-library/react'
-import { describe, expect, it, beforeEach, vi } from 'vitest'
-import { useResume } from '../../hooks/useResume'
-import type { ResumeData } from '../../types/resume'
+import { useResume } from '../useResume'
+import type { ResumeData } from '../../types'
 
 const INITIAL: ResumeData = {
   name: '',

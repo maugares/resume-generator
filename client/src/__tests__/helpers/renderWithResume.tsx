@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
 import { render } from '@testing-library/react'
-import { ResumeProvider } from '../../context/ResumeContext'
-import { mockResumeData } from '../../__mocks__/resumeData'
-import type { ResumeData } from '../../types/resume'
+import { ResumeProvider } from '../../context'
+import { mockResumeData } from '../__mocks__/resumeData'
+import type { ResumeData } from '../../types'
 import { vi } from 'vitest'
 
 export function buildContextValue(overrides: Partial<ResumeData> = {}) {

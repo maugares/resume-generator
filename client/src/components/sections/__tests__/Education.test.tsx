@@ -1,8 +1,7 @@
 import { screen, fireEvent } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
-import { Education } from '../../components/Education'
-import { renderWithResume } from '../helpers/renderWithResume'
-import { mockResumeData } from '../../__mocks__/resumeData'
+import { Education } from '../Education'
+import { renderWithResume } from '../../../__tests__/helpers/renderWithResume'
+import { mockResumeData } from '../../../__tests__/__mocks__/resumeData'
 
 describe('Education', () => {
   it('renders the Education section header', () => {

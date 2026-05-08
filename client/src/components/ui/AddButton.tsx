@@ -1,4 +1,4 @@
-import type { ResumeArrayField } from '../types/resume'
+import type { ResumeArrayField } from '../../types'
 
 export function AddButton({
   addArrayItem,

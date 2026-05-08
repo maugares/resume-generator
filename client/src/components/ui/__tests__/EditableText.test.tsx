@@ -1,6 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
-import { EditableText } from '../../components/EditableText'
+import { EditableText } from '../EditableText'
 
 describe('EditableText', () => {
   it('renders the value in view mode', () => {

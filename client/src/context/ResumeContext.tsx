@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import type { useResume } from '../hooks/useResume'
+import type { useResume } from '../../hooks'
 
 type ResumeContextValue = ReturnType<typeof useResume>
 

@@ -1,8 +1,5 @@
-import { EditableText } from './EditableText'
-import { Header } from './Header'
-import { AddButton } from './AddButton'
-import { RemoveButton } from './RemoveButton'
-import { useResumeContext } from '../context/ResumeContext'
+import { EditableText, Header, AddButton, RemoveButton } from '../ui'
+import { useResumeContext } from '../../context'
 
 export function Experience() {
   const { formData, removeArrayItem, updateArrayItem, addArrayItem } =

@@ -1,7 +1,5 @@
-/* client/src/components/Skills.tsx */
-import { EditableText } from './EditableText'
-import { Header } from './Header'
-import { useResumeContext } from '../context/ResumeContext'
+import { EditableText, Header } from '../ui'
+import { useResumeContext } from '../../context'
 
 export function Skills() {
   const { formData, handleChange } = useResumeContext()

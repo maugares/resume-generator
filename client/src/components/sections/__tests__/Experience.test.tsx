@@ -1,7 +1,6 @@
 import { screen, fireEvent } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
-import { Experience } from '../../components/Experience'
-import { renderWithResume } from '../helpers/renderWithResume'
+import { Experience } from '../Experience'
+import { renderWithResume } from '../../../__tests__/helpers/renderWithResume'
 
 describe('Experience', () => {
   it('renders the Experience section header', () => {

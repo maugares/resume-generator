@@ -1,7 +1,6 @@
 import { screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
-import { Skills } from '../../components/Skills'
-import { renderWithResume } from '../helpers/renderWithResume'
+import { Skills } from '../Skills'
+import { renderWithResume } from '../../../__tests__/helpers/renderWithResume'
 
 describe('Skills', () => {
   it('renders the Skills section header', () => {

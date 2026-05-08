@@ -1,7 +1,6 @@
 import { screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
-import { ContactInfo } from '../../components/ContactInfo'
-import { renderWithResume } from '../helpers/renderWithResume'
+import { ContactInfo } from '../ContactInfo'
+import { renderWithResume } from '../../../__tests__/helpers/renderWithResume'
 
 describe('ContactInfo', () => {
   it('renders the Contact section header', () => {

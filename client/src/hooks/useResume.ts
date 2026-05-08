@@ -4,7 +4,7 @@ import type {
   ExperienceItem,
   ResumeArrayField,
   ResumeData,
-} from '../types/resume'
+} from '../types'
 
 const LOCAL_STORAGE_KEY = 'resume_editor_data'
 

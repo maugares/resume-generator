@@ -1,8 +1,7 @@
-import { useResume } from './hooks/useResume'
-import type { ResumeData } from './types/resume'
-import { ResumePreview } from './components/ResumePreview'
-import { ResumeProvider } from './context/ResumeContext'
-import './styles/App.css'
+import { useResume } from './hooks'
+import type { ResumeData } from './types'
+import { ResumePreview } from './components'
+import { ResumeProvider } from './context'
 
 const INITIAL_STATE: ResumeData = {
   name: '',

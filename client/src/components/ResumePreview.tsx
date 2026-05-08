@@ -1,10 +1,6 @@
-import { EditableText } from './EditableText'
-import { ContactInfo } from './ContactInfo'
-import { Education } from './Education'
-import { Experience } from './Experience'
-import { Avatar } from './Avatar'
-import { Skills } from './Skills'
-import { useResumeContext } from '../context/ResumeContext'
+import { EditableText, Avatar } from './ui'
+import { ContactInfo, Education, Experience, Skills } from './sections'
+import { useResumeContext } from '../context'
 
 export const ResumePreview = () => {
   const { formData, handleChange } = useResumeContext()
