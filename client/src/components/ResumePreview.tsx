@@ -26,9 +26,9 @@ export const ResumePreview = ({
     <div className="flex justify-center p-10 min-h-screen">
       <article
         id="resume-document"
-        className="flex w-a4 min-h-a4 bg-white shadow-2xl font-sans print:m-0 print:shadow-none"
+        className="flex w-a4 h-a4 bg-white  print:m-0 print:shadow-none"
       >
-        <aside className="w-[33%] bg-resume-slate text-white px-8 py-12 flex flex-col gap-10 text-[13px]">
+        <aside className="w-[36%] bg-resume-slate text-white px-8 py-12 flex flex-col gap-10">
           <Avatar />
           <ContactInfo data={data} updateField={updateField} />
           <Education

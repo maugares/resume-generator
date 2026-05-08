@@ -38,7 +38,7 @@ export function Experience({
                 }
                 className="text-[15px] font-bold uppercase"
               />
-              <div className="flex gap-1 text-[13px] italic text-gray-400 font-medium">
+              <div className="flex gap-1 italic text-gray-400 font-medium">
                 <EditableText
                   value={exp.startDate}
                   autoWidth
@@ -61,7 +61,7 @@ export function Experience({
               onChange={(v) =>
                 updateArrayItem('experience', i, { ...exp, company: v })
               }
-              className="text-[14px] text-gray-500 italic mb-3"
+              className="text-gray-500 italic mb-3"
             />
             <EditableText
               value={exp.description}
@@ -71,7 +71,7 @@ export function Experience({
                   description: v,
                 })
               }
-              className="text-[13px] leading-[1.7] text-gray-700 leading-snug"
+              className="text-gray-700"
             />
           </div>
         ))}

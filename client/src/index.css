@@ -25,3 +25,11 @@
     margin: 0 !important;
   }
 }
+
+@layer base {
+  html {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12px;
+    text-size-adjust: 'auto';
+  }
+}

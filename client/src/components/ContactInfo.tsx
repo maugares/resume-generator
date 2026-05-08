@@ -1,6 +1,7 @@
 import type React from 'react'
 import type { ResumeData } from '../types/resume'
 import { EditableText } from './EditableText'
+import { Header } from './Header'
 
 export function ContactInfo({
   data,
@@ -11,10 +12,8 @@ export function ContactInfo({
 }) {
   return (
     <section>
-      <h3 className="text-[14px] font-bold uppercase border-b border-white/20 pb-2 mb-4 tracking-[1px]">
-        Contact
-      </h3>
-      <div className="space-y-1">
+      <Header title="Contact" />
+      <div className="space-y-2">
         <EditableText
           value={data.phone}
           onChange={(v) => updateField('phone', v)}
@@ -30,7 +29,6 @@ export function ContactInfo({
           value={data.address}
           onChange={(v) => updateField('address', v)}
           placeholder="Address"
-          multiline
         />
       </div>
     </section>
