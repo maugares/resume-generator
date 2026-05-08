@@ -1,5 +1,4 @@
-/* client/src/components/EditableText.tsx */
-import React, { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useLayoutEffect } from 'react'
 
 interface EditableTextProps {
   value: string
@@ -8,19 +7,19 @@ interface EditableTextProps {
   placeholder?: string
 }
 
-export const EditableText: React.FC<EditableTextProps> = ({
+export function EditableText({
   value,
   onChange,
   className = '',
   placeholder = 'Click to edit...',
-}) => {
+}: EditableTextProps) {
   const [isEditing, setIsEditing] = useState(false)
   const divRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isEditing && divRef.current) {
+      divRef.current.innerText = value
       divRef.current.focus()
-      // Place cursor at end
       const range = document.createRange()
       const sel = window.getSelection()
       range.selectNodeContents(divRef.current)
@@ -53,8 +52,6 @@ export const EditableText: React.FC<EditableTextProps> = ({
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
         className={`${sharedClasses} bg-current/10`}
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: value }}
       />
     )
   }
