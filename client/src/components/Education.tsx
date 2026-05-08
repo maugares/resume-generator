@@ -1,26 +1,19 @@
 import type React from 'react'
-import type { ResumeData } from '../types/resume'
 import { EditableText } from './EditableText'
 import { AddButton } from './AddButton'
 import { RemoveButton } from './RemoveButton'
 import { Header } from './Header'
+import { useResumeContext } from '../context/ResumeContext'
 
-export function Education({
-  data,
-  removeArrayItem,
-  updateArrayItem,
-  addArrayItem,
-}: {
-  data: ResumeData
-  removeArrayItem: (field: any, index: number) => void
-  updateArrayItem: (field: any, index: number, newItem: any) => void
-  addArrayItem: (field: any) => void
-}) {
+export function Education() {
+  const { formData, removeArrayItem, updateArrayItem, addArrayItem } =
+    useResumeContext()
+
   return (
     <section>
       <Header title="Education" />
       <div className="space-y-6">
-        {data.education.map((edu, i) => (
+        {formData.education.map((edu, i) => (
           <div key={i} className="relative group text-gray-100">
             <RemoveButton
               removeArrayItem={removeArrayItem}

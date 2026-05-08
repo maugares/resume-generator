@@ -1,33 +1,29 @@
 import type React from 'react'
-import type { ResumeData } from '../types/resume'
 import { EditableText } from './EditableText'
 import { Header } from './Header'
+import { useResumeContext } from '../context/ResumeContext'
 
-export function ContactInfo({
-  data,
-  updateField,
-}: {
-  data: ResumeData
-  updateField: (field: string, value: string) => void
-}) {
+export function ContactInfo() {
+  const { formData, handleChange } = useResumeContext()
+
   return (
     <section>
       <Header title="Contact" />
       <div className="space-y-2">
         <EditableText
-          value={data.phone}
-          onChange={(v) => updateField('phone', v)}
+          value={formData.phone}
+          onChange={(v) => handleChange('phone', v)}
           placeholder="Phone"
         />
         <EditableText
-          value={data.email}
-          onChange={(v) => updateField('email', v)}
+          value={formData.email}
+          onChange={(v) => handleChange('email', v)}
           placeholder="Email"
           className="break-all"
         />
         <EditableText
-          value={data.address}
-          onChange={(v) => updateField('address', v)}
+          value={formData.address}
+          onChange={(v) => handleChange('address', v)}
           placeholder="Address"
         />
       </div>

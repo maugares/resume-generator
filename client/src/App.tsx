@@ -1,8 +1,8 @@
 import React from 'react'
 import { useResume } from './hooks/useResume'
-import { ResumeForm } from './components/ResumeForm'
 import type { ResumeData } from './types/resume'
 import { ResumePreview } from './components/ResumePreview'
+import { ResumeProvider } from './context/ResumeContext'
 import './styles/App.css'
 
 const INITIAL_STATE: ResumeData = {
@@ -29,38 +29,28 @@ It uses:
     - The component renders a main section with a title and the ResumeForm component, passing down the necessary props for managing form state and handling submissions. 
 */
 function App() {
-  const {
-    formData,
-    handleChange,
-    updateArrayItem,
-    addArrayItem,
-    removeArrayItem,
-  } = useResume(INITIAL_STATE)
+  const resume = useResume(INITIAL_STATE)
 
   const handlePrint = () => {
     window.print() // Triggers the system print dialog
   }
 
   return (
-    <div className="relative w-screen h-screen bg-[#525659] overflow-hidden">
-      {/* Floating Download Button - Hidden during print */}
-      <button
-        onClick={handlePrint}
-        className="fixed bottom-8 right-8 z-50 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-lg no-print transition-all transform hover:scale-105"
-      >
-        Download PDF
-      </button>
+    <ResumeProvider value={resume}>
+      <div className="relative w-screen h-screen bg-[#525659] overflow-hidden">
+        {/* Floating Download Button - Hidden during print */}
+        <button
+          onClick={handlePrint}
+          className="fixed bottom-8 right-8 z-50 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-lg no-print transition-all transform hover:scale-105"
+        >
+          Download PDF
+        </button>
 
-      <div className="h-full overflow-y-auto">
-        <ResumePreview
-          data={formData}
-          updateField={handleChange}
-          updateArrayItem={updateArrayItem}
-          addArrayItem={addArrayItem}
-          removeArrayItem={removeArrayItem}
-        />
+        <div className="h-full overflow-y-auto">
+          <ResumePreview />
+        </div>
       </div>
-    </div>
+    </ResumeProvider>
   )
 }
 

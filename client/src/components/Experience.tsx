@@ -1,26 +1,19 @@
 import type React from 'react'
-import type { ResumeData } from '../types/resume'
 import { EditableText } from './EditableText'
 import { Header } from './Header'
 import { AddButton } from './AddButton'
 import { RemoveButton } from './RemoveButton'
+import { useResumeContext } from '../context/ResumeContext'
 
-export function Experience({
-  data,
-  removeArrayItem,
-  updateArrayItem,
-  addArrayItem,
-}: {
-  data: ResumeData
-  removeArrayItem: (field: any, index: number) => void
-  updateArrayItem: (field: any, index: number, newItem: any) => void
-  addArrayItem: (field: any) => void
-}) {
+export function Experience() {
+  const { formData, removeArrayItem, updateArrayItem, addArrayItem } =
+    useResumeContext()
+
   return (
     <section>
       <Header title="Experience" />
       <div className="space-y-10">
-        {data.experience.map((exp, i) => (
+        {formData.experience.map((exp, i) => (
           <div key={i} className="relative group">
             <RemoveButton
               removeArrayItem={removeArrayItem}
