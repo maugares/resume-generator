@@ -277,17 +277,17 @@ export const ResumePreview = () => {
                     }}
                   >
                     <div className="flex justify-between items-baseline mb-1">
-                      <p className="text-[15px] font-bold">
+                      <p className="text-[16px] leading-tight font-bold">
                         {exp.position || 'Position'}
                       </p>
-                      <p className="italic text-gray-400 font-medium">
+                      <p className="text-[16px] leading-tight text-black font-medium">
                         {exp.startDate || 'Start'} - {exp.endDate || 'End'}
                       </p>
                     </div>
-                    <p className="text-gray-500 italic mb-3">
+                    <p className="text-[15px] leading-tight text-black italic mb-3">
                       {exp.company || 'Company'}
                     </p>
-                    <ul className="list-disc pl-5 space-y-1 text-gray-700">
+                    <ul className="list-disc pl-5 space-y-0.5 text-[16px] leading-[1.25] text-black">
                       {getDescriptionLines(exp.description).map(
                         (line, lineIndex) => (
                           <li key={lineIndex}>{line || 'Description'}</li>

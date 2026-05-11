@@ -95,9 +95,9 @@ export function Experience({
                       position: v,
                     })
                   }
-                  className="text-[15px] font-bold"
+                  className="text-[16px] leading-tight font-bold"
                 />
-                <div className="flex gap-1 italic text-gray-400 font-medium">
+                <div className="flex gap-1 text-[16px] leading-tight text-black font-medium">
                   <EditableText
                     value={exp.startDate}
                     onChange={(v) =>
@@ -127,9 +127,9 @@ export function Experience({
                     company: v,
                   })
                 }
-                className="text-gray-500 italic mb-3"
+                className="text-[15px] leading-tight text-black italic mb-3"
               />
-              <ul className="list-disc pl-5 space-y-1 text-gray-700">
+              <ul className="list-disc pl-5 space-y-0.5 text-[16px] leading-[1.25] text-black">
                 {getDescriptionLines(exp.description).map((line, lineIndex) => (
                   <li
                     key={lineIndex}
@@ -138,6 +138,7 @@ export function Experience({
                   >
                     <EditableText
                       value={line}
+                      className="leading-[1.25]"
                       onChange={(v) =>
                         updateArrayItem('experience', sourceIndex, {
                           ...exp,
