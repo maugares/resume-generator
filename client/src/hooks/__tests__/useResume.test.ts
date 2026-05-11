@@ -122,4 +122,50 @@ describe('useResume', () => {
     const { result } = renderHook(() => useResume(INITIAL))
     expect(result.current.formData.languages).toEqual([''])
   })
+
+  it('normalizes empty arrays for descriptions and languages', () => {
+    const persisted = {
+      ...INITIAL,
+      experience: [
+        {
+          position: 'Engineer',
+          company: 'Acme',
+          startDate: '2020',
+          endDate: '2022',
+          description: [],
+        },
+      ],
+      languages: [],
+    }
+
+    localStorage.setItem('resume_editor_data', JSON.stringify(persisted))
+
+    const { result } = renderHook(() => useResume(INITIAL))
+
+    expect(result.current.formData.experience[0].description).toEqual([''])
+    expect(result.current.formData.languages).toEqual([''])
+  })
+
+  it('normalizes empty strings for descriptions and languages', () => {
+    const persisted = {
+      ...INITIAL,
+      experience: [
+        {
+          position: 'Engineer',
+          company: 'Acme',
+          startDate: '2020',
+          endDate: '2022',
+          description: '',
+        },
+      ],
+      languages: '',
+    }
+
+    localStorage.setItem('resume_editor_data', JSON.stringify(persisted))
+
+    const { result } = renderHook(() => useResume(INITIAL))
+
+    expect(result.current.formData.experience[0].description).toEqual([''])
+    expect(result.current.formData.languages).toEqual([''])
+  })
 })

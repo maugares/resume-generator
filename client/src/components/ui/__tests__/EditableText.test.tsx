@@ -108,4 +108,43 @@ describe('EditableText', () => {
 
     expect(secondOnChange).toHaveBeenCalledWith('Second')
   })
+
+  it('does nothing when Tab has no next field', () => {
+    const onChange = vi.fn()
+
+    render(<EditableText value="Only" onChange={onChange} />)
+
+    fireEvent.click(screen.getByText('Only'))
+    let editable: HTMLElement | null = null
+    return waitFor(() => {
+      editable = document.querySelector('[contenteditable]') as HTMLElement
+      expect(editable).toBeInTheDocument()
+    }).then(() => {
+      fireEvent.keyDown(editable as HTMLElement, { key: 'Tab' })
+
+      expect(onChange).not.toHaveBeenCalled()
+      expect(document.querySelector('[contenteditable]')).toBeInTheDocument()
+    })
+  })
+
+  it('respects a prevented keydown handler', async () => {
+    const onKeyDown = vi.fn((event: React.KeyboardEvent<HTMLDivElement>) => {
+      event.preventDefault()
+    })
+
+    render(
+      <EditableText value="Only" onChange={vi.fn()} onKeyDown={onKeyDown} />
+    )
+
+    fireEvent.click(screen.getByText('Only'))
+    let editable: HTMLElement | null = null
+    await waitFor(() => {
+      editable = document.querySelector('[contenteditable]') as HTMLElement
+      expect(editable).toBeInTheDocument()
+    })
+    fireEvent.keyDown(editable, { key: 'Tab' })
+
+    expect(onKeyDown).toHaveBeenCalled()
+    expect(editable).toBeInTheDocument()
+  })
 })

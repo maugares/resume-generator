@@ -1,4 +1,4 @@
-import { screen, fireEvent } from '@testing-library/react'
+import { screen, fireEvent, waitFor } from '@testing-library/react'
 import { Experience } from '../Experience'
 import { renderWithResume } from '../../../__tests__/helpers/renderWithResume'
 
@@ -137,7 +137,7 @@ describe('Experience', () => {
     })
   })
 
-  it('adds a new description line on Enter', () => {
+  it('adds a new description line on Enter', async () => {
     const experienceItem = {
       position: 'Engineer',
       company: 'Example Co',
@@ -151,6 +151,46 @@ describe('Experience', () => {
     })
 
     fireEvent.click(screen.getByText('First line'))
+    let editable: HTMLElement | null = null
+    await waitFor(() => {
+      editable = document.querySelector('[contenteditable]') as HTMLElement
+      expect(editable).toBeInTheDocument()
+    })
+    fireEvent.keyDown(editable, { key: 'Enter' })
+
+    expect(contextValue.updateArrayItem).toHaveBeenCalledWith('experience', 0, {
+      ...experienceItem,
+      description: ['First line', ''],
+    })
+  })
+
+  it('skips focus when the inserted description target cannot be found', async () => {
+    const experienceItem = {
+      position: 'Engineer',
+      company: 'Example Co',
+      startDate: '2020-01-01',
+      endDate: '2022-01-01',
+      description: ['First line'],
+    }
+
+    const originalQuerySelector = document.querySelector.bind(document)
+    const querySelectorSpy = vi
+      .spyOn(document, 'querySelector')
+      .mockImplementation((selector) => {
+        if (
+          typeof selector === 'string' &&
+          selector.includes('data-exp-index')
+        ) {
+          return null
+        }
+
+        return originalQuerySelector(selector as never)
+      })
+    const { contextValue } = renderWithResume(<Experience />, {
+      experience: [experienceItem],
+    })
+
+    fireEvent.click(screen.getByText('First line'))
     const editable = document.querySelector('[contenteditable]') as HTMLElement
     fireEvent.keyDown(editable, { key: 'Enter' })
 
@@ -158,6 +198,9 @@ describe('Experience', () => {
       ...experienceItem,
       description: ['First line', ''],
     })
+    expect(querySelectorSpy).toHaveBeenCalled()
+
+    querySelectorSpy.mockRestore()
   })
 
   it('removes a non-first empty description line on Backspace', () => {

@@ -34,6 +34,16 @@ describe('ResumePreview', () => {
     expect(getAllByText('Page 1 / 1')).toHaveLength(1)
   })
 
+  it('renders a single empty page when experience is empty', () => {
+    vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(100)
+
+    renderWithResume(<ResumePreview />, { experience: [] })
+
+    expect(screen.getByText('Page 1 of 1')).toBeInTheDocument()
+    expect(screen.getByText('Page 1 / 1')).toBeInTheDocument()
+    expect(screen.queryByText('Software Engineer')).toBeNull()
+  })
+
   it('renders multiple pages and continuation labels when measured content overflows', () => {
     vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(100)
 
@@ -121,6 +131,10 @@ describe('ResumePreview', () => {
     expect(secondPageElement).toBeDefined()
 
     act(() => {
+      observerCallback?.([])
+    })
+
+    act(() => {
       observerCallback?.([
         {
           isIntersecting: false,
@@ -151,5 +165,42 @@ describe('ResumePreview', () => {
           element?.textContent?.replace(/\s+/g, ' ').trim() === 'Page 2 of 2'
       ).length
     ).toBeGreaterThan(0)
+  })
+
+  it('disconnects the observer on unmount', () => {
+    vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(100)
+
+    const disconnect = vi.fn()
+
+    class ControlledIntersectionObserver {
+      constructor(_callback: (entries: IntersectionObserverEntry[]) => void) {}
+
+      observe() {}
+
+      unobserve() {}
+
+      disconnect() {
+        disconnect()
+      }
+    }
+
+    globalThis.IntersectionObserver =
+      ControlledIntersectionObserver as unknown as typeof IntersectionObserver
+
+    const { unmount } = renderWithResume(<ResumePreview />, {
+      experience: [
+        {
+          position: 'Role 1',
+          company: 'Company 1',
+          startDate: '2020',
+          endDate: '2021',
+          description: ['Built features'],
+        },
+      ],
+    })
+
+    unmount()
+
+    expect(disconnect).toHaveBeenCalledTimes(1)
   })
 })

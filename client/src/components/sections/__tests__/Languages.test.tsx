@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react'
+import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { Languages } from '../Languages'
 import { renderWithResume } from '../../../__tests__/helpers/renderWithResume'
 
@@ -61,6 +61,38 @@ describe('Languages', () => {
       1,
       ''
     )
+  })
+
+  it('skips focus when the inserted language target cannot be found', async () => {
+    const originalQuerySelector = document.querySelector.bind(document)
+    const querySelectorSpy = vi
+      .spyOn(document, 'querySelector')
+      .mockImplementation((selector) => {
+        if (
+          typeof selector === 'string' &&
+          selector.includes('data-language-index')
+        ) {
+          return null
+        }
+
+        return originalQuerySelector(selector as never)
+      })
+    const { contextValue } = renderWithResume(<Languages />, {
+      languages: ['English', 'Spanish'],
+    })
+
+    fireEvent.click(screen.getByText('English'))
+    let editable: HTMLElement | null = null
+    await waitFor(() => {
+      editable = document.querySelector('[contenteditable]') as HTMLElement
+      expect(editable).toBeInTheDocument()
+    })
+    fireEvent.keyDown(editable, { key: 'Enter' })
+
+    expect(contextValue.addArrayItem).toHaveBeenCalledWith('languages')
+    expect(querySelectorSpy).toHaveBeenCalled()
+
+    querySelectorSpy.mockRestore()
   })
 
   it('removes a non-first empty language line on Backspace', () => {
