@@ -96,9 +96,47 @@ describe('Education', () => {
     expect(contextValue.addArrayItem).toHaveBeenCalledWith('education')
   })
 
-  it('calls removeArrayItem when a remove button is clicked', () => {
+  it('inserts a new blank education entry above the current one', () => {
+    const first = {
+      institution: 'University of Example',
+      degree: 'Bachelor of Science in Computer Science',
+      startDate: '2015-09-01',
+      endDate: '2019-06-01',
+    }
+    const second = {
+      institution: 'Example High School',
+      degree: 'High School Diploma',
+      startDate: '2011-09-01',
+      endDate: '2015-06-01',
+    }
+
+    const { contextValue } = renderWithResume(<Education />, {
+      education: [first, second],
+    })
+
+    fireEvent.click(
+      screen.getAllByRole('button', { name: 'Add entry above' })[1]
+    )
+
+    expect(contextValue.addArrayItem).toHaveBeenCalledWith('education')
+    expect(contextValue.updateArrayItem).toHaveBeenCalledWith(
+      'education',
+      2,
+      second
+    )
+    expect(contextValue.updateArrayItem).toHaveBeenCalledWith('education', 1, {
+      degree: '',
+      institution: '',
+      startDate: '',
+      endDate: '',
+    })
+  })
+
+  it('calls removeArrayItem when Remove entry is clicked', () => {
     const { contextValue } = renderWithResume(<Education />)
-    const removeButtons = screen.getAllByRole('button', { name: '✕' })
+    const removeButtons = screen.getAllByRole('button', {
+      name: 'Remove entry',
+    })
     fireEvent.click(removeButtons[0])
     expect(contextValue.removeArrayItem).toHaveBeenCalledWith('education', 0)
   })

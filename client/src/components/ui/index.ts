@@ -1,5 +1,6 @@
-export { AddButton } from './AddButton'
+export { AddButton } from './buttons'
 export { Avatar } from './Avatar'
 export { EditableText } from './EditableText'
+export { EntryActionMenu } from './EntryActionMenu'
 export { Header } from './Header'
-export { RemoveButton } from './RemoveButton'
+export { RemoveButton } from './buttons'

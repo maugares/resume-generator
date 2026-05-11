@@ -224,11 +224,52 @@ describe('Experience', () => {
     expect(contextValue.addArrayItem).toHaveBeenCalledWith('experience')
   })
 
-  it('calls removeArrayItem when a remove button is clicked', () => {
+  it('calls removeArrayItem when Remove entry is clicked', () => {
     const { contextValue } = renderWithResume(<Experience />)
-    const removeButtons = screen.getAllByRole('button', { name: '✕' })
+    const removeButtons = screen.getAllByRole('button', {
+      name: 'Remove entry',
+    })
     fireEvent.click(removeButtons[0])
     expect(contextValue.removeArrayItem).toHaveBeenCalledWith('experience', 0)
+  })
+
+  it('inserts a new blank entry above the current one', () => {
+    const itemA = {
+      position: 'Role A',
+      company: 'Company A',
+      startDate: '2019',
+      endDate: '2020',
+      description: ['A'],
+    }
+    const itemB = {
+      position: 'Role B',
+      company: 'Company B',
+      startDate: '2020',
+      endDate: '2021',
+      description: ['B'],
+    }
+
+    const { contextValue } = renderWithResume(<Experience />, {
+      experience: [itemA, itemB],
+    })
+
+    fireEvent.click(
+      screen.getAllByRole('button', { name: 'Add entry above' })[1]
+    )
+
+    expect(contextValue.addArrayItem).toHaveBeenCalledWith('experience')
+    expect(contextValue.updateArrayItem).toHaveBeenCalledWith(
+      'experience',
+      2,
+      itemB
+    )
+    expect(contextValue.updateArrayItem).toHaveBeenCalledWith('experience', 1, {
+      position: '',
+      company: '',
+      startDate: '',
+      endDate: '',
+      description: [''],
+    })
   })
 
   it('uses itemIndexes mapping for remove and update actions', () => {
@@ -260,7 +301,7 @@ describe('Experience', () => {
       }
     )
 
-    fireEvent.click(screen.getByRole('button', { name: '✕' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Remove entry' }))
     expect(contextValue.removeArrayItem).toHaveBeenCalledWith('experience', 1)
 
     contextValue.updateArrayItem.mockClear()
@@ -296,7 +337,7 @@ describe('Experience', () => {
       }
     )
 
-    expect(screen.queryByRole('button', { name: '✕' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Remove entry' })).toBeNull()
   })
 
   it('renders no entries when experience is empty', () => {

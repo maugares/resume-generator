@@ -1,4 +1,4 @@
-import type { ResumeArrayField } from '../../types'
+import type { ResumeArrayField } from '../../../types'
 
 type AddButtonVariant = 'light' | 'dark'
 

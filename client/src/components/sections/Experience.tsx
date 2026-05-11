@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { EditableText, Header, AddButton, RemoveButton } from '../ui'
+import { EditableText, Header, AddButton, EntryActionMenu } from '../ui'
 import { useResumeContext } from '../../context'
 import type { ExperienceItem } from '../../types'
 
@@ -68,6 +68,24 @@ export function Experience({
     return lines.length > 0 ? lines : ['']
   }
 
+  const insertEntryAbove = (insertIndex: number) => {
+    const existingItems = [...formData.experience]
+
+    addArrayItem('experience')
+
+    for (let i = existingItems.length - 1; i >= insertIndex; i -= 1) {
+      updateArrayItem('experience', i + 1, existingItems[i])
+    }
+
+    updateArrayItem('experience', insertIndex, {
+      position: '',
+      company: '',
+      startDate: '',
+      endDate: '',
+      description: [''],
+    })
+  }
+
   return (
     <section>
       {showHeader && <Header title="Experience" />}
@@ -81,10 +99,9 @@ export function Experience({
 
           return (
             <div key={i} className="relative group">
-              <RemoveButton
-                removeArrayItem={removeArrayItem}
-                index={sourceIndex}
-                field="experience"
+              <EntryActionMenu
+                onAddAbove={() => insertEntryAbove(sourceIndex)}
+                onRemove={() => removeArrayItem('experience', sourceIndex)}
               />
               <div className="flex justify-between items-baseline mb-1">
                 <EditableText
