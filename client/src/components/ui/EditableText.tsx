@@ -35,6 +35,34 @@ export function EditableText({
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Tab') {
+      e.preventDefault()
+
+      const editableFields = Array.from(
+        document.querySelectorAll<HTMLElement>('[data-editable-field="true"]')
+      )
+      const currentIndex = editableFields.findIndex(
+        (field) => field === e.currentTarget
+      )
+
+      if (currentIndex === -1) {
+        return
+      }
+
+      const nextIndex = e.shiftKey ? currentIndex - 1 : currentIndex + 1
+      const nextField = editableFields[nextIndex]
+
+      if (!nextField) {
+        return
+      }
+
+      requestAnimationFrame(() => {
+        nextField.click()
+      })
+
+      return
+    }
+
     if (e.key === 'Escape') {
       if (divRef.current) divRef.current.innerText = value
       setIsEditing(false)
@@ -47,6 +75,7 @@ export function EditableText({
     return (
       <div
         ref={divRef}
+        data-editable-field="true"
         contentEditable
         suppressContentEditableWarning
         onBlur={handleBlur}
@@ -58,6 +87,7 @@ export function EditableText({
 
   return (
     <div
+      data-editable-field="true"
       onClick={() => setIsEditing(true)}
       className={`cursor-text hover:bg-current/10 rounded transition-colors min-h-[1.2em] whitespace-pre-wrap ${className} ${!value ? 'italic opacity-50' : ''}`}
     >

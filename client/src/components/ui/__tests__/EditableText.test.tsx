@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { EditableText } from '../EditableText'
 
 describe('EditableText', () => {
@@ -48,5 +48,57 @@ describe('EditableText', () => {
       <EditableText value="Hello" onChange={vi.fn()} className="custom-class" />
     )
     expect(screen.getByText('Hello')).toHaveClass('custom-class')
+  })
+
+  it('moves to the next field when Tab is pressed', async () => {
+    const firstOnChange = vi.fn()
+    render(
+      <>
+        <EditableText value="First" onChange={firstOnChange} />
+        <EditableText value="Second" onChange={vi.fn()} />
+      </>
+    )
+
+    fireEvent.click(screen.getByText('First'))
+    const firstEditable = document.querySelector(
+      '[contenteditable]'
+    ) as HTMLElement
+    fireEvent.keyDown(firstEditable, { key: 'Tab' })
+
+    await waitFor(() => {
+      const activeEditable = document.querySelector(
+        '[contenteditable]'
+      ) as HTMLElement
+      expect(activeEditable).toBeInTheDocument()
+      expect(activeEditable.innerText).toBe('Second')
+    })
+
+    expect(firstOnChange).toHaveBeenCalledWith('First')
+  })
+
+  it('moves to the previous field when Shift+Tab is pressed', async () => {
+    const secondOnChange = vi.fn()
+    render(
+      <>
+        <EditableText value="First" onChange={vi.fn()} />
+        <EditableText value="Second" onChange={secondOnChange} />
+      </>
+    )
+
+    fireEvent.click(screen.getByText('Second'))
+    const secondEditable = document.querySelector(
+      '[contenteditable]'
+    ) as HTMLElement
+    fireEvent.keyDown(secondEditable, { key: 'Tab', shiftKey: true })
+
+    await waitFor(() => {
+      const activeEditable = document.querySelector(
+        '[contenteditable]'
+      ) as HTMLElement
+      expect(activeEditable).toBeInTheDocument()
+      expect(activeEditable.innerText).toBe('First')
+    })
+
+    expect(secondOnChange).toHaveBeenCalledWith('Second')
   })
 })
