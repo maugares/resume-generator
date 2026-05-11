@@ -5,6 +5,22 @@ export function Experience() {
   const { formData, removeArrayItem, updateArrayItem, addArrayItem } =
     useResumeContext()
 
+  const getDescriptionLines = (description: string) => {
+    const lines = description.split('\n').map((line) => line.trim())
+    const nonEmptyLines = lines.filter((line) => line.length > 0)
+    return nonEmptyLines.length > 0 ? nonEmptyLines : ['']
+  }
+
+  const updateDescriptionLine = (
+    description: string,
+    index: number,
+    value: string
+  ) => {
+    const lines = getDescriptionLines(description)
+    lines[index] = value
+    return lines.filter((line) => line.trim().length > 0).join('\n')
+  }
+
   return (
     <section>
       <Header title="Experience" />
@@ -25,7 +41,7 @@ export function Experience() {
                     position: v,
                   })
                 }
-                className="text-[15px] font-bold uppercase"
+                className="text-[15px] font-bold"
               />
               <div className="flex gap-1 italic text-gray-400 font-medium">
                 <EditableText
@@ -50,16 +66,25 @@ export function Experience() {
               }
               className="text-gray-500 italic mb-3"
             />
-            <EditableText
-              value={exp.description}
-              onChange={(v) =>
-                updateArrayItem('experience', i, {
-                  ...exp,
-                  description: v,
-                })
-              }
-              className="text-gray-700"
-            />
+            <ul className="list-disc pl-5 space-y-1 text-gray-700">
+              {getDescriptionLines(exp.description).map((line, lineIndex) => (
+                <li key={lineIndex}>
+                  <EditableText
+                    value={line}
+                    onChange={(v) =>
+                      updateArrayItem('experience', i, {
+                        ...exp,
+                        description: updateDescriptionLine(
+                          exp.description,
+                          lineIndex,
+                          v
+                        ),
+                      })
+                    }
+                  />
+                </li>
+              ))}
+            </ul>
           </div>
         ))}
         <AddButton addArrayItem={addArrayItem} field="experience" />
