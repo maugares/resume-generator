@@ -7,6 +7,7 @@ export interface ResumeData {
   summary: string
   education: EducationItem[]
   experience: ExperienceItem[]
+  languages: string[]
   skills: string
 }
 
@@ -25,4 +26,4 @@ export interface EducationItem {
   endDate: string
 }
 
-export type ResumeArrayField = 'experience' | 'education'
+export type ResumeArrayField = 'experience' | 'education' | 'languages'

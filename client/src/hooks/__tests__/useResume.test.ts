@@ -10,6 +10,7 @@ const INITIAL: ResumeData = {
   summary: '',
   experience: [],
   education: [],
+  languages: [''],
   skills: '',
 }
 
@@ -74,6 +75,13 @@ describe('useResume', () => {
     expect(result.current.formData.education[0].degree).toBe('')
   })
 
+  it('addArrayItem adds an empty language entry', () => {
+    const { result } = renderHook(() => useResume(INITIAL))
+    act(() => result.current.addArrayItem('languages'))
+    expect(result.current.formData.languages).toHaveLength(2)
+    expect(result.current.formData.languages[1]).toBe('')
+  })
+
   it('updateArrayItem updates the correct item', () => {
     const { result } = renderHook(() => useResume(INITIAL))
     act(() => result.current.addArrayItem('experience'))
@@ -102,5 +110,16 @@ describe('useResume', () => {
     act(() => result.current.handleChange('name', 'Stored'))
     const saved = JSON.parse(localStorage.getItem('resume_editor_data') ?? '{}')
     expect(saved.name).toBe('Stored')
+  })
+
+  it('normalizes missing languages from persisted data', () => {
+    const { languages: _, ...legacyWithoutLanguages } = INITIAL
+    localStorage.setItem(
+      'resume_editor_data',
+      JSON.stringify(legacyWithoutLanguages)
+    )
+
+    const { result } = renderHook(() => useResume(INITIAL))
+    expect(result.current.formData.languages).toEqual([''])
   })
 })

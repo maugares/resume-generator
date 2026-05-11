@@ -25,12 +25,34 @@ const normalizeDescription = (description: unknown): string[] => {
   return ['']
 }
 
+const normalizeLanguages = (languages: unknown): string[] => {
+  if (Array.isArray(languages)) {
+    return languages.length > 0
+      ? languages.map((language) => String(language ?? ''))
+      : ['']
+  }
+
+  if (typeof languages === 'string') {
+    const lines = languages
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0)
+
+    return lines.length > 0 ? lines : ['']
+  }
+
+  return ['']
+}
+
 const normalizeResumeData = (data: ResumeData): ResumeData => ({
   ...data,
   experience: data.experience.map((item) => ({
     ...item,
     description: normalizeDescription(item.description),
   })),
+  languages: normalizeLanguages(
+    (data as ResumeData & { languages?: unknown }).languages
+  ),
 })
 
 const createEmptyExperience = (): ExperienceItem => ({
@@ -47,6 +69,8 @@ const createEmptyEducation = (): EducationItem => ({
   startDate: '',
   endDate: '',
 })
+
+const createEmptyLanguage = () => ''
 
 export const useResume = (initialState: ResumeData) => {
   const [formData, setFormData] = useState<ResumeData>(() => {
@@ -83,6 +107,7 @@ export const useResume = (initialState: ResumeData) => {
     const templates = {
       experience: createEmptyExperience(),
       education: createEmptyEducation(),
+      languages: createEmptyLanguage(),
     }
 
     setFormData((prev) => ({

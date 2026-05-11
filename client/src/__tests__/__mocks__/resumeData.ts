@@ -38,5 +38,6 @@ export const mockResumeData: ResumeData = {
     },
   ],
   summary: 'Frontend engineer focused on React applications and UX polish.',
+  languages: ['English', 'Spanish'],
   skills: 'JavaScript, React, Node.js',
 }

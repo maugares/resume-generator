@@ -11,6 +11,7 @@ const INITIAL_STATE: ResumeData = {
   summary: '',
   experience: [],
   education: [],
+  languages: [''],
   skills: '',
 }
 

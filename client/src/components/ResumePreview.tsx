@@ -1,6 +1,12 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { EditableText, Avatar } from './ui'
-import { ContactInfo, Education, Experience, Skills } from './sections'
+import {
+  ContactInfo,
+  Education,
+  Experience,
+  Languages,
+  Skills,
+} from './sections'
 import { useResumeContext } from '../context'
 import type { ExperienceItem } from '../types'
 
@@ -198,6 +204,7 @@ export const ResumePreview = () => {
                       <Avatar />
                       <ContactInfo />
                       <Education />
+                      <Languages />
                       <Skills />
                     </>
                   ) : (
