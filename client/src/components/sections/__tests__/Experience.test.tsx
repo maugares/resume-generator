@@ -10,6 +10,11 @@ describe('Experience', () => {
     ).toBeInTheDocument()
   })
 
+  it('hides the Experience section header when showHeader is false', () => {
+    renderWithResume(<Experience showHeader={false} />)
+    expect(screen.queryByRole('heading', { name: 'Experience' })).toBeNull()
+  })
+
   it('renders all experience entries', () => {
     renderWithResume(<Experience />)
     expect(screen.getByText('Software Engineer')).toBeInTheDocument()
@@ -139,6 +144,11 @@ describe('Experience', () => {
     ).toBeInTheDocument()
   })
 
+  it('hides Add button when showAddButton is false', () => {
+    renderWithResume(<Experience showAddButton={false} />)
+    expect(screen.queryByRole('button', { name: /add experience/i })).toBeNull()
+  })
+
   it('calls addArrayItem when Add button is clicked', () => {
     const { contextValue } = renderWithResume(<Experience />)
     fireEvent.click(screen.getByRole('button', { name: /add experience/i }))
@@ -150,6 +160,74 @@ describe('Experience', () => {
     const removeButtons = screen.getAllByRole('button', { name: '✕' })
     fireEvent.click(removeButtons[0])
     expect(contextValue.removeArrayItem).toHaveBeenCalledWith('experience', 0)
+  })
+
+  it('uses itemIndexes mapping for remove and update actions', () => {
+    const mappedItem = {
+      position: 'Mapped Position',
+      company: 'Mapped Co',
+      startDate: '2021-01-01',
+      endDate: '2022-01-01',
+      description: 'Mapped description',
+    }
+
+    const { contextValue } = renderWithResume(
+      <Experience
+        items={[mappedItem]}
+        itemIndexes={[1]}
+        showAddButton={false}
+      />,
+      {
+        experience: [
+          {
+            position: 'Original 0',
+            company: 'Original Co 0',
+            startDate: '2019-01-01',
+            endDate: '2020-01-01',
+            description: 'Original description',
+          },
+          mappedItem,
+        ],
+      }
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: '✕' }))
+    expect(contextValue.removeArrayItem).toHaveBeenCalledWith('experience', 1)
+
+    contextValue.updateArrayItem.mockClear()
+
+    fireEvent.click(screen.getByText('Mapped Position'))
+    const editable = document.querySelector('[contenteditable]') as HTMLElement
+    editable.innerText = 'Updated Mapped Position'
+    fireEvent.blur(editable)
+
+    expect(contextValue.updateArrayItem).toHaveBeenCalledWith('experience', 1, {
+      ...mappedItem,
+      position: 'Updated Mapped Position',
+    })
+  })
+
+  it('safely skips undefined items passed through items prop', () => {
+    renderWithResume(
+      <Experience
+        items={[undefined as unknown as never]}
+        itemIndexes={[0]}
+        showAddButton={false}
+      />,
+      {
+        experience: [
+          {
+            position: 'Software Engineer',
+            company: 'Tech Company',
+            startDate: '2019-06-01',
+            endDate: '2021-08-01',
+            description: 'Worked on various projects using JavaScript.',
+          },
+        ],
+      }
+    )
+
+    expect(screen.queryByRole('button', { name: '✕' })).toBeNull()
   })
 
   it('renders no entries when experience is empty', () => {

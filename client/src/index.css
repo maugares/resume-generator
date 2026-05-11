@@ -20,7 +20,7 @@
   }
 
   /* Ensure shadows and UI elements don't print */
-  #resume-document {
+  .resume-page {
     box-shadow: none !important;
     margin: 0 !important;
   }

@@ -1,9 +1,24 @@
 import { EditableText, Header, AddButton, RemoveButton } from '../ui'
 import { useResumeContext } from '../../context'
+import type { ExperienceItem } from '../../types'
 
-export function Experience() {
+interface ExperienceProps {
+  items?: ExperienceItem[]
+  itemIndexes?: number[]
+  showAddButton?: boolean
+  showHeader?: boolean
+}
+
+export function Experience({
+  items,
+  itemIndexes,
+  showAddButton = true,
+  showHeader = true,
+}: ExperienceProps = {}) {
   const { formData, removeArrayItem, updateArrayItem, addArrayItem } =
     useResumeContext()
+
+  const experienceItems = items ?? formData.experience
 
   const getDescriptionLines = (description: string) => {
     const lines = description.split('\n').map((line) => line.trim())
@@ -23,71 +38,90 @@ export function Experience() {
 
   return (
     <section>
-      <Header title="Experience" />
+      {showHeader && <Header title="Experience" />}
       <div className="space-y-10">
-        {formData.experience.map((exp, i) => (
-          <div key={i} className="relative group">
-            <RemoveButton
-              removeArrayItem={removeArrayItem}
-              index={i}
-              field="experience"
-            />
-            <div className="flex justify-between items-baseline mb-1">
-              <EditableText
-                value={exp.position}
-                onChange={(v) =>
-                  updateArrayItem('experience', i, {
-                    ...exp,
-                    position: v,
-                  })
-                }
-                className="text-[15px] font-bold"
+        {experienceItems.map((exp, i) => {
+          if (!exp) {
+            return null
+          }
+
+          const sourceIndex = itemIndexes?.[i] ?? i
+
+          return (
+            <div key={i} className="relative group">
+              <RemoveButton
+                removeArrayItem={removeArrayItem}
+                index={sourceIndex}
+                field="experience"
               />
-              <div className="flex gap-1 italic text-gray-400 font-medium">
+              <div className="flex justify-between items-baseline mb-1">
                 <EditableText
-                  value={exp.startDate}
+                  value={exp.position}
                   onChange={(v) =>
-                    updateArrayItem('experience', i, { ...exp, startDate: v })
+                    updateArrayItem('experience', sourceIndex, {
+                      ...exp,
+                      position: v,
+                    })
                   }
+                  className="text-[15px] font-bold"
                 />
-                <span>-</span>
-                <EditableText
-                  value={exp.endDate}
-                  onChange={(v) =>
-                    updateArrayItem('experience', i, { ...exp, endDate: v })
-                  }
-                />
-              </div>
-            </div>
-            <EditableText
-              value={exp.company}
-              onChange={(v) =>
-                updateArrayItem('experience', i, { ...exp, company: v })
-              }
-              className="text-gray-500 italic mb-3"
-            />
-            <ul className="list-disc pl-5 space-y-1 text-gray-700">
-              {getDescriptionLines(exp.description).map((line, lineIndex) => (
-                <li key={lineIndex}>
+                <div className="flex gap-1 italic text-gray-400 font-medium">
                   <EditableText
-                    value={line}
+                    value={exp.startDate}
                     onChange={(v) =>
-                      updateArrayItem('experience', i, {
+                      updateArrayItem('experience', sourceIndex, {
                         ...exp,
-                        description: updateDescriptionLine(
-                          exp.description,
-                          lineIndex,
-                          v
-                        ),
+                        startDate: v,
                       })
                     }
                   />
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-        <AddButton addArrayItem={addArrayItem} field="experience" />
+                  <span>-</span>
+                  <EditableText
+                    value={exp.endDate}
+                    onChange={(v) =>
+                      updateArrayItem('experience', sourceIndex, {
+                        ...exp,
+                        endDate: v,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+              <EditableText
+                value={exp.company}
+                onChange={(v) =>
+                  updateArrayItem('experience', sourceIndex, {
+                    ...exp,
+                    company: v,
+                  })
+                }
+                className="text-gray-500 italic mb-3"
+              />
+              <ul className="list-disc pl-5 space-y-1 text-gray-700">
+                {getDescriptionLines(exp.description).map((line, lineIndex) => (
+                  <li key={lineIndex}>
+                    <EditableText
+                      value={line}
+                      onChange={(v) =>
+                        updateArrayItem('experience', sourceIndex, {
+                          ...exp,
+                          description: updateDescriptionLine(
+                            exp.description,
+                            lineIndex,
+                            v
+                          ),
+                        })
+                      }
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        })}
+        {showAddButton && (
+          <AddButton addArrayItem={addArrayItem} field="experience" />
+        )}
       </div>
     </section>
   )
