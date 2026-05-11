@@ -50,7 +50,11 @@ export function Education() {
             </div>
           </div>
         ))}
-        <AddButton addArrayItem={addArrayItem} field="education" />
+        <AddButton
+          addArrayItem={addArrayItem}
+          field="education"
+          variant="dark"
+        />
       </div>
     </section>
   )

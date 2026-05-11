@@ -1,7 +1,6 @@
 import { screen, fireEvent } from '@testing-library/react'
 import { Education } from '../Education'
 import { renderWithResume } from '../../../__tests__/helpers/renderWithResume'
-import { mockResumeData } from '../../../__tests__/__mocks__/resumeData'
 
 describe('Education', () => {
   it('renders the Education section header', () => {
@@ -30,6 +29,65 @@ describe('Education', () => {
     expect(
       screen.getByRole('button', { name: /add education/i })
     ).toBeInTheDocument()
+  })
+
+  it('uses dark Add button styling for sidebar contrast', () => {
+    renderWithResume(<Education />)
+    expect(screen.getByRole('button', { name: /add education/i })).toHaveClass(
+      'text-white/60'
+    )
+  })
+
+  it('calls updateArrayItem when editable education fields change', () => {
+    const educationItem = {
+      institution: 'University of Example',
+      degree: 'Bachelor of Science in Computer Science',
+      startDate: '2015-09-01',
+      endDate: '2019-06-01',
+    }
+
+    const { contextValue } = renderWithResume(<Education />, {
+      education: [educationItem],
+    })
+
+    const editField = (currentValue: string, nextValue: string) => {
+      fireEvent.click(screen.getByText(currentValue))
+      const editable = document.querySelector(
+        '[contenteditable]'
+      ) as HTMLElement
+      editable.innerText = nextValue
+      fireEvent.blur(editable)
+    }
+
+    editField('Bachelor of Science in Computer Science', 'MSc Computer Science')
+    expect(contextValue.updateArrayItem).toHaveBeenCalledWith('education', 0, {
+      ...educationItem,
+      degree: 'MSc Computer Science',
+    })
+
+    contextValue.updateArrayItem.mockClear()
+
+    editField('University of Example', 'Example Institute')
+    expect(contextValue.updateArrayItem).toHaveBeenCalledWith('education', 0, {
+      ...educationItem,
+      institution: 'Example Institute',
+    })
+
+    contextValue.updateArrayItem.mockClear()
+
+    editField('2015-09-01', '2016-09-01')
+    expect(contextValue.updateArrayItem).toHaveBeenCalledWith('education', 0, {
+      ...educationItem,
+      startDate: '2016-09-01',
+    })
+
+    contextValue.updateArrayItem.mockClear()
+
+    editField('2019-06-01', '2020-06-01')
+    expect(contextValue.updateArrayItem).toHaveBeenCalledWith('education', 0, {
+      ...educationItem,
+      endDate: '2020-06-01',
+    })
   })
 
   it('calls addArrayItem when Add button is clicked', () => {
