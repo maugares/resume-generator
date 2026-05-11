@@ -47,7 +47,7 @@ describe('Experience', () => {
           company: 'Example Co',
           startDate: '2020-01-01',
           endDate: '2022-01-01',
-          description: 'Built features\nImproved test coverage',
+          description: ['Built features', 'Improved test coverage'],
         },
       ],
     })
@@ -66,7 +66,7 @@ describe('Experience', () => {
           company: 'Example Co',
           startDate: '2020-01-01',
           endDate: '2022-01-01',
-          description: '   \n   ',
+          description: [''],
         },
       ],
     })
@@ -82,7 +82,7 @@ describe('Experience', () => {
       company: 'Example Co',
       startDate: '2020-01-01',
       endDate: '2022-01-01',
-      description: 'Built features\nImproved tests',
+      description: ['Built features', 'Improved tests'],
     }
 
     const { contextValue } = renderWithResume(<Experience />, {
@@ -133,7 +133,76 @@ describe('Experience', () => {
     editField('Improved tests', 'Improved quality')
     expect(contextValue.updateArrayItem).toHaveBeenCalledWith('experience', 0, {
       ...experienceItem,
-      description: 'Built features\nImproved quality',
+      description: ['Built features', 'Improved quality'],
+    })
+  })
+
+  it('adds a new description line on Enter', () => {
+    const experienceItem = {
+      position: 'Engineer',
+      company: 'Example Co',
+      startDate: '2020-01-01',
+      endDate: '2022-01-01',
+      description: ['First line'],
+    }
+
+    const { contextValue } = renderWithResume(<Experience />, {
+      experience: [experienceItem],
+    })
+
+    fireEvent.click(screen.getByText('First line'))
+    const editable = document.querySelector('[contenteditable]') as HTMLElement
+    fireEvent.keyDown(editable, { key: 'Enter' })
+
+    expect(contextValue.updateArrayItem).toHaveBeenCalledWith('experience', 0, {
+      ...experienceItem,
+      description: ['First line', ''],
+    })
+  })
+
+  it('removes a non-first empty description line on Backspace', () => {
+    const experienceItem = {
+      position: 'Engineer',
+      company: 'Example Co',
+      startDate: '2020-01-01',
+      endDate: '2022-01-01',
+      description: ['First line', ''],
+    }
+
+    const { contextValue } = renderWithResume(<Experience />, {
+      experience: [experienceItem],
+    })
+
+    fireEvent.click(screen.getByText('Click to edit...'))
+    const editable = document.querySelector('[contenteditable]') as HTMLElement
+    fireEvent.keyDown(editable, { key: 'Backspace' })
+
+    expect(contextValue.updateArrayItem).toHaveBeenCalledWith('experience', 0, {
+      ...experienceItem,
+      description: ['First line'],
+    })
+  })
+
+  it('keeps first line as placeholder when deleting empty first line', () => {
+    const experienceItem = {
+      position: 'Engineer',
+      company: 'Example Co',
+      startDate: '2020-01-01',
+      endDate: '2022-01-01',
+      description: [''],
+    }
+
+    const { contextValue } = renderWithResume(<Experience />, {
+      experience: [experienceItem],
+    })
+
+    fireEvent.click(screen.getByText('Click to edit...'))
+    const editable = document.querySelector('[contenteditable]') as HTMLElement
+    fireEvent.keyDown(editable, { key: 'Backspace' })
+
+    expect(contextValue.updateArrayItem).toHaveBeenCalledWith('experience', 0, {
+      ...experienceItem,
+      description: [''],
     })
   })
 
@@ -168,7 +237,7 @@ describe('Experience', () => {
       company: 'Mapped Co',
       startDate: '2021-01-01',
       endDate: '2022-01-01',
-      description: 'Mapped description',
+      description: ['Mapped description'],
     }
 
     const { contextValue } = renderWithResume(
@@ -184,7 +253,7 @@ describe('Experience', () => {
             company: 'Original Co 0',
             startDate: '2019-01-01',
             endDate: '2020-01-01',
-            description: 'Original description',
+            description: ['Original description'],
           },
           mappedItem,
         ],
@@ -221,7 +290,7 @@ describe('Experience', () => {
             company: 'Tech Company',
             startDate: '2019-06-01',
             endDate: '2021-08-01',
-            description: 'Worked on various projects using JavaScript.',
+            description: ['Worked on various projects using JavaScript.'],
           },
         ],
       }

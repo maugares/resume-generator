@@ -5,6 +5,10 @@ interface EditableTextProps {
   onChange: (newValue: string) => void
   className?: string
   placeholder?: string
+  onKeyDown?: (
+    e: React.KeyboardEvent<HTMLDivElement>,
+    currentText: string
+  ) => void
 }
 
 export function EditableText({
@@ -12,6 +16,7 @@ export function EditableText({
   onChange,
   className = '',
   placeholder = 'Click to edit...',
+  onKeyDown,
 }: EditableTextProps) {
   const [isEditing, setIsEditing] = useState(false)
   const divRef = useRef<HTMLDivElement>(null)
@@ -34,7 +39,13 @@ export function EditableText({
     onChange(divRef.current?.innerText ?? value)
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    onKeyDown?.(e, divRef.current?.innerText ?? value)
+
+    if (e.defaultPrevented) {
+      return
+    }
+
     if (e.key === 'Tab') {
       e.preventDefault()
 

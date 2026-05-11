@@ -25,15 +25,16 @@ export const mockResumeData: ResumeData = {
       company: 'Tech Company',
       startDate: '2019-06-01',
       endDate: '2021-08-01',
-      description:
+      description: [
         'Worked on various projects using JavaScript, React, and Node.js.',
+      ],
     },
     {
       position: 'Intern',
       company: 'Startup Inc.',
       startDate: '2018-06-01',
       endDate: '2018-08-01',
-      description: 'Assisted in developing a web application using React.',
+      description: ['Assisted in developing a web application using React.'],
     },
   ],
   summary: 'Frontend engineer focused on React applications and UX polish.',

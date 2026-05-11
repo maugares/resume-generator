@@ -15,7 +15,7 @@ export interface ExperienceItem {
   position: string
   startDate: string
   endDate: string
-  description: string
+  description: string[]
 }
 
 export interface EducationItem {

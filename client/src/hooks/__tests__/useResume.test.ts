@@ -31,6 +31,29 @@ describe('useResume', () => {
     expect(result.current.formData.name).toBe('Persisted')
   })
 
+  it('normalizes legacy string descriptions from persisted data', () => {
+    const persisted = {
+      ...INITIAL,
+      experience: [
+        {
+          position: 'Engineer',
+          company: 'Acme',
+          startDate: '2020',
+          endDate: '2022',
+          description: 'Line one\nLine two',
+        },
+      ],
+    }
+
+    localStorage.setItem('resume_editor_data', JSON.stringify(persisted))
+    const { result } = renderHook(() => useResume(INITIAL))
+
+    expect(result.current.formData.experience[0].description).toEqual([
+      'Line one',
+      'Line two',
+    ])
+  })
+
   it('handleChange updates a scalar field', () => {
     const { result } = renderHook(() => useResume(INITIAL))
     act(() => result.current.handleChange('name', 'Jane'))
@@ -60,7 +83,7 @@ describe('useResume', () => {
         company: 'Acme',
         startDate: '2020',
         endDate: '2022',
-        description: 'Built things.',
+        description: ['Built things.'],
       })
     )
     expect(result.current.formData.experience[0].position).toBe('Engineer')

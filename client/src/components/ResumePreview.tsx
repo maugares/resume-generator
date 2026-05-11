@@ -8,10 +8,8 @@ const EXPERIENCE_GAP_PX = 40
 const PAGE_FOOTER_RESERVE_PX = 28
 const PAGINATION_SAFETY_BUFFER_PX = 56
 
-const getDescriptionLines = (description: string) => {
-  const lines = description.split('\n').map((line) => line.trim())
-  const nonEmptyLines = lines.filter((line) => line.length > 0)
-  return nonEmptyLines.length > 0 ? nonEmptyLines : ['']
+const getDescriptionLines = (description: string[]) => {
+  return description.length > 0 ? description : ['']
 }
 
 const buildPageIndexes = ({

@@ -8,12 +8,37 @@ import type {
 
 const LOCAL_STORAGE_KEY = 'resume_editor_data'
 
+const normalizeDescription = (description: unknown): string[] => {
+  if (Array.isArray(description)) {
+    return description.length > 0 ? description : ['']
+  }
+
+  if (typeof description === 'string') {
+    const lines = description
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0)
+
+    return lines.length > 0 ? lines : ['']
+  }
+
+  return ['']
+}
+
+const normalizeResumeData = (data: ResumeData): ResumeData => ({
+  ...data,
+  experience: data.experience.map((item) => ({
+    ...item,
+    description: normalizeDescription(item.description),
+  })),
+})
+
 const createEmptyExperience = (): ExperienceItem => ({
   position: '',
   company: '',
   startDate: '',
   endDate: '',
-  description: '',
+  description: [''],
 })
 
 const createEmptyEducation = (): EducationItem => ({
@@ -26,7 +51,12 @@ const createEmptyEducation = (): EducationItem => ({
 export const useResume = (initialState: ResumeData) => {
   const [formData, setFormData] = useState<ResumeData>(() => {
     const savedData = localStorage.getItem(LOCAL_STORAGE_KEY)
-    return savedData ? JSON.parse(savedData) : initialState
+
+    if (!savedData) {
+      return normalizeResumeData(initialState)
+    }
+
+    return normalizeResumeData(JSON.parse(savedData) as ResumeData)
   })
 
   useEffect(() => {
