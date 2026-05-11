@@ -100,9 +100,9 @@ export function EditableText({
     <div
       data-editable-field="true"
       onClick={() => setIsEditing(true)}
-      className={`cursor-text hover:bg-current/10 rounded transition-colors min-h-[1.2em] whitespace-pre-wrap ${className} ${!value ? 'italic opacity-50' : ''}`}
+      className={`cursor-text hover:bg-current/10 rounded transition-colors min-h-[1.2em] whitespace-pre-wrap ${className} ${!String(value ?? '').trim() ? 'italic opacity-50' : ''}`}
     >
-      {value || placeholder}
+      {String(value ?? '').trim() || placeholder}
     </div>
   )
 }

@@ -12,6 +12,13 @@ describe('EditableText', () => {
     expect(screen.getByText('Type here')).toBeInTheDocument()
   })
 
+  it('renders the placeholder when value is whitespace-only', () => {
+    render(
+      <EditableText value="   " onChange={vi.fn()} placeholder="Type here" />
+    )
+    expect(screen.getByText('Type here')).toBeInTheDocument()
+  })
+
   it('uses default placeholder when none is provided', () => {
     render(<EditableText value="" onChange={vi.fn()} />)
     expect(screen.getByText('Click to edit...')).toBeInTheDocument()
