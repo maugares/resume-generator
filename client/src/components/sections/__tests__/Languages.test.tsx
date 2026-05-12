@@ -87,7 +87,7 @@ describe('Languages', () => {
       editable = document.querySelector('[contenteditable]') as HTMLElement
       expect(editable).toBeInTheDocument()
     })
-    fireEvent.keyDown(editable, { key: 'Enter' })
+    fireEvent.keyDown(editable!, { key: 'Enter' })
 
     expect(contextValue.addArrayItem).toHaveBeenCalledWith('languages')
     expect(querySelectorSpy).toHaveBeenCalled()

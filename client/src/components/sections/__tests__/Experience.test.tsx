@@ -156,7 +156,7 @@ describe('Experience', () => {
       editable = document.querySelector('[contenteditable]') as HTMLElement
       expect(editable).toBeInTheDocument()
     })
-    fireEvent.keyDown(editable, { key: 'Enter' })
+    fireEvent.keyDown(editable!, { key: 'Enter' })
 
     expect(contextValue.updateArrayItem).toHaveBeenCalledWith('experience', 0, {
       ...experienceItem,

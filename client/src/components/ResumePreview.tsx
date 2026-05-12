@@ -63,9 +63,9 @@ export const ResumePreview = () => {
 
   const pageRefs = useRef<Array<HTMLElement | null>>([])
   const measureMainRef = useRef<HTMLElement | null>(null)
-  const measureNameRef = useRef<HTMLElement | null>(null)
-  const measureHeaderRef = useRef<HTMLElement | null>(null)
-  const measureAddRef = useRef<HTMLElement | null>(null)
+  const measureNameRef = useRef<HTMLHeadingElement | null>(null)
+  const measureHeaderRef = useRef<HTMLHeadingElement | null>(null)
+  const measureAddRef = useRef<HTMLDivElement | null>(null)
   const measureItemRefs = useRef<Array<HTMLDivElement | null>>([])
 
   useLayoutEffect(() => {
@@ -247,7 +247,7 @@ export const ResumePreview = () => {
       </div>
 
       <div
-        className="pointer-events-none fixed -left-[9999px] top-0 opacity-0"
+        className="pointer-events-none fixed -left-2499.75 top-0 opacity-0"
         aria-hidden
       >
         <article className="flex w-a4 h-a4">
@@ -287,7 +287,7 @@ export const ResumePreview = () => {
                     <p className="text-[15px] leading-tight text-black italic mb-3">
                       {exp.company || 'Company'}
                     </p>
-                    <ul className="list-disc pl-5 space-y-0.5 text-[16px] leading-[1.25] text-black">
+                    <ul className="list-disc pl-5 space-y-0.5 text-[16px] leading-tight text-black">
                       {getDescriptionLines(exp.description).map(
                         (line, lineIndex) => (
                           <li key={lineIndex}>{line || 'Description'}</li>

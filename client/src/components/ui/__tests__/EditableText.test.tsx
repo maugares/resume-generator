@@ -120,7 +120,7 @@ describe('EditableText', () => {
       editable = document.querySelector('[contenteditable]') as HTMLElement
       expect(editable).toBeInTheDocument()
     }).then(() => {
-      fireEvent.keyDown(editable as HTMLElement, { key: 'Tab' })
+      fireEvent.keyDown(editable!, { key: 'Tab' })
 
       expect(onChange).not.toHaveBeenCalled()
       expect(document.querySelector('[contenteditable]')).toBeInTheDocument()
@@ -142,7 +142,7 @@ describe('EditableText', () => {
       editable = document.querySelector('[contenteditable]') as HTMLElement
       expect(editable).toBeInTheDocument()
     })
-    fireEvent.keyDown(editable, { key: 'Tab' })
+    fireEvent.keyDown(editable!, { key: 'Tab' })
 
     expect(onKeyDown).toHaveBeenCalled()
     expect(editable).toBeInTheDocument()
