@@ -3,8 +3,8 @@ import type {
   ResumeData,
   ExperienceItem,
   EducationItem,
-} from '../types/resume.js'
-import { cssStyles } from '../styles/cssStyles.js'
+} from '../types/resume.ts'
+import { cssStyles } from '../styles/cssStyles.ts'
 
 const renderExperience = (items: ExperienceItem[]) => {
   if (!items || items.length === 0) return ''

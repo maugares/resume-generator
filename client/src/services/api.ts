@@ -8,13 +8,16 @@ import type { ResumeData } from '../types'
  * @param data - The structured resume information.
  * @returns A Promise resolving to the PDF Blob.
  */
-export const generatePdf = async (data: ResumeData): Promise<Blob> => {
+export const generatePdf = async (
+  data: ResumeData,
+  previewHtml?: string
+): Promise<Blob> => {
   const response = await fetch('http://localhost:5000/create-pdf', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify({ data, previewHtml }),
   })
 
   if (!response.ok) {

@@ -3,26 +3,49 @@ import express from 'express'
 import type { Request, Response } from 'express'
 import puppeteer from 'puppeteer'
 import cors from 'cors'
-import type { ResumeData } from './types/resume.js'
-import { generateHTML } from './templates/ResumeTemplate.js'
+import type { ResumeData } from './types/resume.ts'
+import { generateHTML } from './templates/ResumeTemplate.ts'
+
+interface CreatePdfPayload {
+  data: ResumeData
+  previewHtml?: string
+}
+
+const hasPreviewPayload = (
+  body: ResumeData | CreatePdfPayload
+): body is CreatePdfPayload => {
+  return typeof body === 'object' && body !== null && 'data' in body
+}
 
 const app = express()
 const PORT: number = 5000
 
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }))
-app.use(express.json())
+app.use(express.json({ limit: '5mb' }))
 
 app.post(
   '/create-pdf',
-  async (req: Request<{}, {}, ResumeData>, res: Response) => {
+  async (
+    req: Request<{}, {}, ResumeData | CreatePdfPayload>,
+    res: Response
+  ) => {
     let browser: puppeteer.Browser | null = null
     try {
       browser = await puppeteer.launch({
         headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
       })
+
+      const payload = req.body
+      const resumeData = hasPreviewPayload(payload) ? payload.data : payload
+      const htmlContent =
+        hasPreviewPayload(payload) && payload.previewHtml
+          ? payload.previewHtml
+          : generateHTML(resumeData)
+
       const page = await browser.newPage()
-      const htmlContent = generateHTML(req.body)
+
+      await page.emulateMediaType('print')
 
       await page.setContent(htmlContent, { waitUntil: 'networkidle0' })
 

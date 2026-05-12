@@ -10,13 +10,17 @@ describe('generatePdf', () => {
       blob: vi.fn().mockResolvedValue(pdfBlob),
     } as unknown as Response)
 
-    const result = await generatePdf(mockResumeData)
+    const result = await generatePdf(mockResumeData, '<html></html>')
 
     expect(fetchMock).toHaveBeenCalledWith(
       'http://localhost:5000/create-pdf',
       expect.objectContaining({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          data: mockResumeData,
+          previewHtml: '<html></html>',
+        }),
       })
     )
     expect(result).toBe(pdfBlob)

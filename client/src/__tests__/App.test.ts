@@ -1,6 +1,15 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { createElement } from 'react'
 import App from '../App'
+import { generatePdf } from '../services'
+
+vi.mock('../services', () => ({
+  generatePdf: vi.fn(),
+}))
+
+vi.mock('../services/previewSnapshot', () => ({
+  buildPreviewSnapshotHtml: vi.fn(() => '<html><body>preview</body></html>'),
+}))
 
 describe('App', () => {
   it('renders the download button and page indicator', () => {
@@ -12,14 +21,25 @@ describe('App', () => {
     expect(screen.getByText('Page 1 of 1')).toBeInTheDocument()
   })
 
-  it('calls window.print when Download PDF is clicked', () => {
-    const printSpy = vi
-      .spyOn(window, 'print')
+  it('requests PDF from server when Download PDF is clicked', async () => {
+    const mockBlob = new Blob(['pdf'], { type: 'application/pdf' })
+    vi.mocked(generatePdf).mockResolvedValue(mockBlob)
+
+    const createObjectURLSpy = vi
+      .spyOn(URL, 'createObjectURL')
+      .mockReturnValue('blob:resume')
+    const revokeObjectURLSpy = vi
+      .spyOn(URL, 'revokeObjectURL')
       .mockImplementation(() => undefined)
 
     render(createElement(App))
     fireEvent.click(screen.getByRole('button', { name: /download pdf/i }))
 
-    expect(printSpy).toHaveBeenCalledTimes(1)
+    await waitFor(() => {
+      expect(generatePdf).toHaveBeenCalledTimes(1)
+    })
+
+    expect(createObjectURLSpy).toHaveBeenCalledWith(mockBlob)
+    expect(revokeObjectURLSpy).toHaveBeenCalledWith('blob:resume')
   })
 })
