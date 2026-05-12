@@ -2,8 +2,7 @@ import { useResume } from './hooks'
 import type { ResumeData } from './types'
 import { ResumePreview } from './components'
 import { ResumeProvider } from './context'
-import { generatePdf } from './services'
-import { buildPreviewSnapshotHtml } from './services/previewSnapshot'
+import { usePdfExport } from './hooks/usePdfExport'
 
 const INITIAL_STATE: ResumeData = {
   name: '',
@@ -19,31 +18,7 @@ const INITIAL_STATE: ResumeData = {
 
 function App() {
   const resume = useResume(INITIAL_STATE)
-
-  const handlePrint = async () => {
-    try {
-      const previewHtml = buildPreviewSnapshotHtml()
-
-      const pdfBlob = await generatePdf(
-        resume.formData,
-        previewHtml ?? undefined
-      )
-      const fileUrl = URL.createObjectURL(pdfBlob)
-      const link = document.createElement('a')
-      const safeName =
-        resume.formData.name.trim().replace(/\s+/g, '-').toLowerCase() ||
-        'resume'
-
-      link.href = fileUrl
-      link.download = `${safeName}.pdf`
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-      URL.revokeObjectURL(fileUrl)
-    } catch (error) {
-      console.error('PDF generation failed:', error)
-    }
-  }
+  const handlePrint = usePdfExport(resume.formData)
 
   return (
     <ResumeProvider value={resume}>
