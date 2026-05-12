@@ -146,7 +146,7 @@ export function Experience({
                 }
                 className="text-[15px] leading-tight text-black italic mb-3"
               />
-              <ul className="list-disc pl-5 space-y-0.5 text-[16px] leading-[1.25] text-black">
+              <ul className="list-disc pl-5 space-y-0.5 text-[16px] leading-tight text-black">
                 {getDescriptionLines(exp.description).map((line, lineIndex) => (
                   <li
                     key={lineIndex}
@@ -156,7 +156,7 @@ export function Experience({
                   >
                     <EditableText
                       value={line}
-                      className="leading-[1.25]"
+                      className="leading-tight"
                       onChange={(v) =>
                         updateArrayItem('experience', sourceIndex, {
                           ...exp,
