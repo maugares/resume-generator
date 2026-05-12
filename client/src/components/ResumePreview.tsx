@@ -205,7 +205,7 @@ export const ResumePreview = () => {
                 }}
                 className="resume-page flex w-a4 h-a4 bg-white shadow-md print:m-0 print:shadow-none"
               >
-                <aside className="w-[36%] bg-resume-slate text-white px-8 py-12 flex flex-col gap-10">
+                <aside className="w-[36%] bg-resume-slate text-white px-8 py-12 flex flex-col gap-10 text-[16px]">
                   {isFirstPage ? (
                     <>
                       <Avatar />

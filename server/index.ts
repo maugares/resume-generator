@@ -13,18 +13,24 @@ interface CreatePdfPayload {
 
 type CreatePdfRequestBody = ResumeData | (ResumeData & CreatePdfPayload)
 
-const hasPreviewPayload = (
-  body: CreatePdfRequestBody
-): body is CreatePdfPayload => {
+const hasPreviewPayload = (body: CreatePdfRequestBody): boolean => {
   return typeof body === 'object' && body !== null && 'data' in body
 }
 
 const getResumeData = (body: CreatePdfRequestBody): ResumeData => {
   if (hasPreviewPayload(body)) {
-    return body.data
+    return (body as ResumeData & CreatePdfPayload).data
   }
 
   return body
+}
+
+const getPreviewHtml = (body: CreatePdfRequestBody): string | undefined => {
+  if (!hasPreviewPayload(body)) {
+    return undefined
+  }
+
+  return (body as ResumeData & CreatePdfPayload).previewHtml
 }
 
 const app = express()
@@ -45,19 +51,25 @@ app.post(
 
       const payload = req.body
       const resumeData = getResumeData(payload)
-      const htmlContent =
-        hasPreviewPayload(payload) && payload.previewHtml
-          ? payload.previewHtml
-          : generateHTML(resumeData)
+      const previewHtml = getPreviewHtml(payload)
+      const hasClientPreviewHtml =
+        typeof previewHtml === 'string' && previewHtml.length > 0
+      const htmlContent = previewHtml ?? generateHTML(resumeData)
 
       const page = await browser.newPage()
 
-      await page.emulateMediaType('print')
+      // Match client preview styles for snapshot-based exports.
+      await page.emulateMediaType(hasClientPreviewHtml ? 'screen' : 'print')
 
       await page.setContent(htmlContent, { waitUntil: 'networkidle0' })
 
+      // Ensure layout is stable before PDF capture.
+      await page.evaluate(() => document.fonts?.ready)
+
       const pdfBuffer = await page.pdf({
         format: 'A4',
+        preferCSSPageSize: true,
+        scale: 1,
         printBackground: true,
         margin: { top: '0px', right: '0px', bottom: '0px', left: '0px' },
       })
