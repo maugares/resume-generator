@@ -11,10 +11,20 @@ interface CreatePdfPayload {
   previewHtml?: string
 }
 
+type CreatePdfRequestBody = ResumeData | (ResumeData & CreatePdfPayload)
+
 const hasPreviewPayload = (
-  body: ResumeData | CreatePdfPayload
+  body: CreatePdfRequestBody
 ): body is CreatePdfPayload => {
   return typeof body === 'object' && body !== null && 'data' in body
+}
+
+const getResumeData = (body: CreatePdfRequestBody): ResumeData => {
+  if (hasPreviewPayload(body)) {
+    return body.data
+  }
+
+  return body
 }
 
 const app = express()
@@ -25,10 +35,7 @@ app.use(express.json({ limit: '5mb' }))
 
 app.post(
   '/create-pdf',
-  async (
-    req: Request<{}, {}, ResumeData | CreatePdfPayload>,
-    res: Response
-  ) => {
+  async (req: Request<{}, {}, CreatePdfRequestBody>, res: Response) => {
     let browser: puppeteer.Browser | null = null
     try {
       browser = await puppeteer.launch({
@@ -37,7 +44,7 @@ app.post(
       })
 
       const payload = req.body
-      const resumeData = hasPreviewPayload(payload) ? payload.data : payload
+      const resumeData = getResumeData(payload)
       const htmlContent =
         hasPreviewPayload(payload) && payload.previewHtml
           ? payload.previewHtml
@@ -59,7 +66,9 @@ app.post(
       res.contentType('application/pdf').send(pdfBuffer)
     } catch (error) {
       if (browser) await browser.close()
-      res.status(500).send('Server failed to generate PDF')
+      const message = error instanceof Error ? error.message : String(error)
+      console.error('PDF generation error:', error)
+      res.status(500).send(`Server failed to generate PDF: ${message}`)
     }
   }
 )

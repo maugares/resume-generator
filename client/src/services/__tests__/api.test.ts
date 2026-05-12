@@ -18,6 +18,7 @@ describe('generatePdf', () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          ...mockResumeData,
           data: mockResumeData,
           previewHtml: '<html></html>',
         }),

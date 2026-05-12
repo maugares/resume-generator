@@ -24,12 +24,10 @@ function App() {
     try {
       const previewHtml = buildPreviewSnapshotHtml()
 
-      if (!previewHtml) {
-        window.print()
-        return
-      }
-
-      const pdfBlob = await generatePdf(resume.formData, previewHtml)
+      const pdfBlob = await generatePdf(
+        resume.formData,
+        previewHtml ?? undefined
+      )
       const fileUrl = URL.createObjectURL(pdfBlob)
       const link = document.createElement('a')
       const safeName =
@@ -42,8 +40,8 @@ function App() {
       link.click()
       link.remove()
       URL.revokeObjectURL(fileUrl)
-    } catch {
-      window.print()
+    } catch (error) {
+      console.error('PDF generation failed:', error)
     }
   }
 

@@ -1,34 +1,26 @@
-const serializeStyle = (style: CSSStyleDeclaration): string => {
-  return Array.from(style)
-    .map((name) => `${name}:${style.getPropertyValue(name)};`)
-    .join('')
+const collectDocumentCss = (): string => {
+  const cssChunks: string[] = []
+
+  for (const sheet of Array.from(document.styleSheets)) {
+    try {
+      const rules = (sheet as CSSStyleSheet).cssRules
+      for (const rule of Array.from(rules)) {
+        cssChunks.push(rule.cssText)
+      }
+    } catch {
+      // Ignore stylesheets we cannot read (e.g. cross-origin restrictions).
+    }
+  }
+
+  return cssChunks.join('\n')
 }
 
-const cloneWithInlineStyles = (source: HTMLElement): HTMLElement => {
+const clonePageForPrint = (source: HTMLElement): HTMLElement => {
   const clone = source.cloneNode(true) as HTMLElement
 
-  const sourceElements = [
-    source,
-    ...Array.from(source.querySelectorAll<HTMLElement>('*')),
-  ]
-  const cloneElements = [
-    clone,
-    ...Array.from(clone.querySelectorAll<HTMLElement>('*')),
-  ]
-
-  sourceElements.forEach((element, index) => {
-    const cloneElement = cloneElements[index]
-    if (!cloneElement) {
-      return
-    }
-
-    const computed = window.getComputedStyle(element)
-    cloneElement.setAttribute('style', serializeStyle(computed))
-
-    if (cloneElement.classList.contains('no-print')) {
-      cloneElement.remove()
-    }
-  })
+  clone
+    .querySelectorAll<HTMLElement>('.no-print')
+    .forEach((element) => element.remove())
 
   return clone
 }
@@ -46,9 +38,11 @@ export const buildPreviewSnapshotHtml = (): string | null => {
     return null
   }
 
+  const cssText = collectDocumentCss()
+
   const pageHtml = pages
     .map((page) => {
-      const clone = cloneWithInlineStyles(page)
+      const clone = clonePageForPrint(page)
       return clone.outerHTML
     })
     .join('\n')
@@ -58,6 +52,8 @@ export const buildPreviewSnapshotHtml = (): string | null => {
   <head>
     <meta charset="UTF-8">
     <style>
+      ${cssText}
+
       @page {
         size: A4;
         margin: 0;
@@ -70,9 +66,17 @@ export const buildPreviewSnapshotHtml = (): string | null => {
         background: white;
       }
 
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
       .resume-page {
+        width: 210mm;
+        min-height: 297mm;
         page-break-after: always;
         break-after: page;
+        overflow: hidden;
       }
 
       .resume-page:last-of-type {
