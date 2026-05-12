@@ -109,6 +109,13 @@ export const ResumePreview = () => {
 
     setPageIndexes(pages)
     setCurrentPage((prev) => Math.min(prev, pages.length))
+
+    return () => {
+      measureItemRefs.current = measureItemRefs.current.slice(
+        0,
+        formData.experience.length
+      )
+    }
   }, [formData.name, formData.experience])
 
   useEffect(() => {

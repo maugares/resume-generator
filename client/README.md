@@ -71,3 +71,6 @@ export default defineConfig([
   },
 ])
 ```
+
+<!-- I want to create a edit-on-form resume with A4 dimensions. It should have two columns, one on the left (33%) and the rest as main area. On the left will go a picture, contact info (telephone, email, location), education[] (degree, institution, dates), languages[], skills[]; on the main will go name, summary and experience[] (first row: position, dates, organisation, activities[])
+ -->

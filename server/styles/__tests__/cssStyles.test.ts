@@ -1,4 +1,5 @@
-import { cssStyles } from '../cssStyles'
+import { describe, expect, it, vi } from 'vitest'
+import { cssStyles } from '../cssStyles.js'
 import * as fs from 'fs'
 
 // Mocking 'fs' or virtual modules in Vitest

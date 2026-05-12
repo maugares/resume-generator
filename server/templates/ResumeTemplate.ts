@@ -1,9 +1,10 @@
+/* maugares/resume-generator/server/templates/ResumeTemplate.ts */
 import type {
   ResumeData,
   ExperienceItem,
   EducationItem,
-} from '../../../client/src/types/resume'
-import { cssStyles } from '../styles/cssStyles.ts'
+} from '../types/resume.js'
+import { cssStyles } from '../styles/cssStyles.js'
 
 const renderExperience = (items: ExperienceItem[]) => {
   if (!items || items.length === 0) return ''
@@ -13,10 +14,14 @@ const renderExperience = (items: ExperienceItem[]) => {
     <div class="exp-item">
       <div class="item-header">
         <span>${exp.position}</span>
-        <span>${exp.startDate} - ${exp.endDate}</span>
+        <span style="font-weight: 500; font-style: italic; color: #666;">
+          ${exp.startDate} - ${exp.endDate}
+        </span>
       </div>
       <div class="company-name">${exp.company}</div>
-      <p>${exp.description}</p>
+      <ul class="exp-list">
+        ${exp.description.map((line) => `<li>${line}</li>`).join('')}
+      </ul>
     </div>
   `
     )
@@ -28,12 +33,10 @@ const renderEducation = (items: EducationItem[]) => {
   return items
     .map(
       (edu) => `
-    <div class="edu-item">
-      <div class="item-header">
-        <span>${edu.degree}</span>
-        <span>${edu.startDate} - ${edu.endDate}</span>
-      </div>
-      <div class="company-name">${edu.institution}</div>
+    <div class="edu-item" style="margin-bottom: 20px;">
+      <div style="font-weight: bold; font-size: 13px; color: white;">${edu.degree}</div>
+      <div style="font-style: italic; color: #ccc; font-size: 12px;">${edu.institution}</div>
+      <div style="color: #aaa; font-size: 11px;">${edu.startDate} - ${edu.endDate}</div>
     </div>
   `
     )
@@ -61,25 +64,22 @@ export const generateHTML = (data: ResumeData): string => {
             </section>
             
             <section>
+              <h3>EDUCATION</h3>
+              ${renderEducation(data.education)}
+            </section>
+            
+            <section>
               <h3>SKILLS</h3>
-              <ul>
-                ${data.skills.map((s) => (s ? `<li>${s}</li>` : '')).join('')}
-              </ul>
+              <p style="white-space: pre-wrap;">${data.skills || ''}</p>
             </section>
           </aside>
           
           <main class="main-content">
             <h1>${(data.name || '').toUpperCase()}</h1>
-            <p class="summary">${data.summary || ''}</p>
             
             <section>
               <h3>EXPERIENCE</h3>
               ${renderExperience(data.experience)}
-            </section>
-
-            <section>
-              <h3>EDUCATION</h3>
-              ${renderEducation(data.education)}
             </section>
           </main>
         </div>

@@ -152,6 +152,7 @@ export function Experience({
                     key={lineIndex}
                     data-exp-index={sourceIndex}
                     data-line-index={lineIndex}
+                    className="hover:bg-white/5 rounded transition-colors"
                   >
                     <EditableText
                       value={line}
