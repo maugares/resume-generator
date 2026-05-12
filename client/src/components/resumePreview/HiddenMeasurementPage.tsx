@@ -1,6 +1,7 @@
 import type { RefObject } from 'react'
 import type { ExperienceItem } from '../../types'
 import { getDescriptionLines } from './pagination'
+import { buildExperienceKey } from '../../utils/experienceKeys'
 
 interface HiddenMeasurementPageProps {
   name: string
@@ -45,33 +46,39 @@ export const HiddenMeasurementPage = ({
             </h3>
 
             <div className="space-y-10">
-              {experience.map((exp: ExperienceItem, index) => (
-                <div
-                  key={`measure-${index}`}
-                  ref={(el) => {
-                    measureItemRefs.current[index] = el
-                  }}
-                >
-                  <div className="flex justify-between items-baseline mb-1">
-                    <p className="text-[16px] leading-tight font-bold">
-                      {exp.position || 'Position'}
+              {experience.map((exp: ExperienceItem, index) => {
+                const experienceKey = buildExperienceKey(exp)
+
+                return (
+                  <div
+                    key={`measure-${experienceKey}`}
+                    ref={(el) => {
+                      measureItemRefs.current[index] = el
+                    }}
+                  >
+                    <div className="flex justify-between items-baseline mb-1">
+                      <p className="text-[16px] leading-tight font-bold">
+                        {exp.position || 'Position'}
+                      </p>
+                      <p className="text-[16px] leading-tight text-black font-medium">
+                        {exp.startDate || 'Start'} - {exp.endDate || 'End'}
+                      </p>
+                    </div>
+                    <p className="text-[15px] leading-tight text-black italic mb-3">
+                      {exp.company || 'Company'}
                     </p>
-                    <p className="text-[16px] leading-tight text-black font-medium">
-                      {exp.startDate || 'Start'} - {exp.endDate || 'End'}
-                    </p>
+                    <ul className="list-disc pl-5 space-y-0.5 text-[16px] leading-tight text-black">
+                      {getDescriptionLines(exp.description).map(
+                        (line, lineIndex) => (
+                          <li key={`${experienceKey}-line-${lineIndex}`}>
+                            {line || 'Description'}
+                          </li>
+                        )
+                      )}
+                    </ul>
                   </div>
-                  <p className="text-[15px] leading-tight text-black italic mb-3">
-                    {exp.company || 'Company'}
-                  </p>
-                  <ul className="list-disc pl-5 space-y-0.5 text-[16px] leading-tight text-black">
-                    {getDescriptionLines(exp.description).map(
-                      (line, lineIndex) => (
-                        <li key={lineIndex}>{line || 'Description'}</li>
-                      )
-                    )}
-                  </ul>
-                </div>
-              ))}
+                )
+              })}
               <div ref={measureAddRef} className="text-sm font-bold">
                 + Add Experience
               </div>

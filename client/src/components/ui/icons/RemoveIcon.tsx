@@ -1,10 +1,10 @@
 export function RemoveIcon({
   size = '2em',
   className = '',
-}: {
+}: Readonly<{
   size?: string
   className?: string
-}) {
+}>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

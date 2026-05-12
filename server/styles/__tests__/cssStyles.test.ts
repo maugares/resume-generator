@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
 import { cssStyles } from '../cssStyles.ts'
-import * as fs from 'fs'
 
 // Mocking 'fs' or virtual modules in Vitest
 vi.mock('fs', () => ({

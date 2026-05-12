@@ -3,7 +3,7 @@ const collectDocumentCss = (): string => {
 
   for (const sheet of Array.from(document.styleSheets)) {
     try {
-      const rules = (sheet as CSSStyleSheet).cssRules
+      const rules = sheet.cssRules
       for (const rule of Array.from(rules)) {
         cssChunks.push(rule.cssText)
       }

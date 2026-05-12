@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { EditableText, Header, AddButton, EntryActionMenu } from '../ui'
 import { useResumeContext } from '../../context'
 import type { ExperienceItem } from '../../types'
+import { buildExperienceKey } from '../../utils/experienceKeys'
 
 interface ExperienceProps {
   items?: ExperienceItem[]
@@ -96,9 +97,10 @@ export function Experience({
           }
 
           const sourceIndex = itemIndexes?.[i] ?? i
+          const experienceKey = buildExperienceKey(exp)
 
           return (
-            <div key={i} className="relative group">
+            <div key={`experience-${experienceKey}`} className="relative group">
               <EntryActionMenu
                 onAddAbove={() => insertEntryAbove(sourceIndex)}
                 onRemove={() => removeArrayItem('experience', sourceIndex)}
@@ -149,7 +151,7 @@ export function Experience({
               <ul className="list-disc pl-5 space-y-0.5 text-[16px] leading-tight text-black">
                 {getDescriptionLines(exp.description).map((line, lineIndex) => (
                   <li
-                    key={lineIndex}
+                    key={`${experienceKey}-line-${lineIndex}`}
                     data-exp-index={sourceIndex}
                     data-line-index={lineIndex}
                     className="hover:bg-white/5 rounded transition-colors"

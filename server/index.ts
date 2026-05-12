@@ -3,7 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import { createPdfHandler } from './pdf/createPdfHandler.ts'
 
-const app = express()
+const app = express().disable('x-powered-by')
 const PORT: number = 5000
 
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }))

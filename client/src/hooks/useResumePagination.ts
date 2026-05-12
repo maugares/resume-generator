@@ -78,9 +78,12 @@ export const useResumePagination = ({
           return
         }
 
-        const pageNumber = Number(
-          visible[0].target.getAttribute('data-page-number')
-        )
+        const target = visible[0].target
+        if (!(target instanceof HTMLElement)) {
+          return
+        }
+
+        const pageNumber = Number(target.dataset.pageNumber)
 
         if (!Number.isNaN(pageNumber)) {
           setCurrentPage(pageNumber)
